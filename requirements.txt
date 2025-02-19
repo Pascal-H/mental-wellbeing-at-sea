@@ -1,0 +1,27 @@
+audb
+audbenchmark
+audinterface
+audiofile
+auglib
+audmodel
+audonnx
+# Proprietary VAD - can be replaced with open source VAD solution
+# Only used in src/data/audio_transforms.py
+# VAD was not used in the runs of this publication
+# auvad
+confidence_intervals
+fastparquet
+jupyter
+matplotlib
+opensmile
+pyarrow
+pyloudnorm
+pynvml
+PyYAML
+scikit-learn
+seaborn
+splitutils
+statsmodels
+torch
+transformers
+xgboost

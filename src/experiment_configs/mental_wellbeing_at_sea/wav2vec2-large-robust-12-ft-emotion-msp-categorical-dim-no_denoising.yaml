@@ -1,0 +1,340 @@
+database:
+  type: "local"
+  # The DataFrame in data_mwas_processed-final_data-only_weekly contains less columns but the same amount of rows than this one
+  path_df_meta: "/data/share/aisoundlab-mental_wellbeing_at_sea/data_mwas_processed-final_data/final_data-df_files.csv"
+  index_column: ["file"]
+  # To be left empty if the DataFrame already contains the audio file paths
+  # Otherwise, path_data will be joined to "file" in the DataFrame
+  path_data: "/data/share/aisoundlab-mental_wellbeing_at_sea/data_mwas_processed-final_data/facebook_denoiser-master64-converted_int16_dithering/pilot-mental_wellbeing_at_sea"
+  # Filter out participants that have less OR EQUAL than n sessions
+  min_sessions: 1
+  # Filter out practice prompts
+  discard_prompts: ["sustained_utterance_0113", "emotion_acting_3130", "emotion_acting_5177", "emotion_acting_2017"]
+  filter_files:
+    path_blacklist: null
+    filter_lists: []
+
+paths:
+  cache_features: "data/mwas/processed/cache/features"
+  cache_vad: "data/mwas/processed/cache/vad"
+  cache_split: "data/mwas/processed/cache/splitting"
+  results_modelling: "results/mwas/modelling"
+
+AudioProcessor:
+  meta:
+    num_workers: -1
+  preprocessing:
+    denoising:
+      no_denoising: null
+      # facebook_denoiser-master64-converted_int16_dithering: null
+    loudness_normalization:
+      # LUFS:
+      #   target_lufs: -24
+      no_loudness_normalization: null
+  vad:
+    devaice_vad:
+      # default settings
+      min_segment_length: 0.76
+      max_segment_length: 6.0
+      # convert frames of 10ms into seconds
+      segment_start_delay: 0.150 # 15 frames
+      segment_end_delay: 0.25 # 25 frames
+    # no_vad: null
+    # auvad:
+    #   # default settings
+    #   min_turn_length: 0.76
+    #   max_turn_length: 6.0
+    #   n_pre: 15
+    #   n_post: 25
+    #   invert: False
+
+FeatureExtractor:
+  meta:
+    num_workers: -1
+  feature_sets:
+    wav2vec2:
+      path_suffix: "audeering"  # will be popped
+      variant: "wav2vec2-large-robust-12-ft-emotion-msp-dim"
+      num_hidden_layers: 0
+      device: "cpu"  # will be popped
+    # wav2vec2:
+    #   path_suffix: "facebook"
+    #   variant: "wav2vec2-large-xlsr-53"
+    #   num_hidden_layers: 0
+    #   device: "cpu"  # workaround: use CPU when using cached embeddings to avoid blocking GPU memory
+    # wav2vec2:
+    #   path_suffix: "facebook"
+    #   variant: "wav2vec2-large-robust"
+    #   num_hidden_layers: 0
+    #   device: "cpu"
+    # wav2vec2:
+    #   path_suffix: "facebook"
+    #   variant: "wav2vec2-large-robust-ft-libri-960h"
+    #   num_hidden_layers: 0
+    #   device: "cpu"
+    # eGeMAPSv02: null
+
+DataProcessor:
+  meta:
+    try_load_existing_split: False
+  splitting:
+    fixed_test_speakers:
+      speaker_column: "participant_code"
+      test_speakers: ['9f9ab51a-8f08-5849-7c05-79d62b13547a', '438cf652-7363-66be-3082-1e0c831a15b3', '16a6213f-fe81-de19-b8db-2aed14244e82', '76241337-a906-782a-7476-f73763ba0f29', '86060b2c-88c0-8c54-bfdc-dabbf2bdd9fd']
+
+ModelTrainer:
+  meta:
+      num_workers: -1
+      predict_proba: True  # False
+      groups: "participant_code"
+      sessions: "session"
+      # Save also the features and labels
+      save_full_data: False
+  cohorts:
+    # - "survey": ["weekly_01", "weekly_02"]
+    # - "survey": "daily"
+    - "all"
+  speech_tasks:
+    - "standardized_tasks":
+        ["work_tasks_4718", "sustained_utterance_7351", "emotion_acting_5839", "emotion_acting_4373", "count_9822"]
+    - "spontaneous-work_tasks":
+        ["work_tasks_4718"]
+    - "sustained_utterance-a":
+        ["sustained_utterance_7351"]
+    - "nilago-neutral":
+        ["emotion_acting_5839"]
+    - "nilago-happy":
+        ["emotion_acting_4373"]
+    - "counting":
+        ["count_9822"]
+    # - "all":
+    #     null
+  feature_selections:
+    - type: "no_feature_selection"
+    # - type: "logistic_regression"  # Potentially omit if too slow with ComParE
+    #   max_iter: 10_000
+  feature_normalizations:
+    - "sklearn_standard_scaler"
+  personalisations:
+    - "none":
+        null
+    # - "baseline":
+    #     surveys: ["baseline"]
+  target_variables:
+    - "pss_10_total_score_category"
+    - "phq_8_total_score_category"
+    - "who_5_total_score_category"
+    - "pss_10_total_score_category"
+    # - "phq_8_total_score":
+    #     range_raw: [0, 24]
+    #     range_normalized: [0, 1]
+    # - "stress_current":
+    #     range_raw: [0, 100]
+    #     range_normalized: [0, 1]
+    # - "stress_work_tasks":
+    #     range_raw: [0, 100]
+    #     range_normalized: [0, 1]
+    # - "pss_10_total_score":
+    #     range_raw: [0, 40]
+    #     range_normalized: [0, 1]
+    # - "who_5_percentage_score_corrected":
+    #     range_raw: [0, 100]
+    #     range_normalized: [0, 1]
+    # - "emotions_current_happy"
+    # - "emotions_current_sad"
+    # - "emotions_current_anger"
+    # - "emotions_current_fear"
+    # - "emotions_current_indifference"
+    # - "emotions_current_shame"
+  cv_strategies_outer:
+    # - "fixed_test_set":
+    #     null
+    - "loso":
+        null
+  cv_strategies_inner:
+    - "no_inner_cv":
+        null
+    # - "loso":
+    #     null
+    # - "stratified_group_k_fold":  # Only for categorical classification
+    #     n_splits: 5
+    #     shuffle: False
+    #     random_state: null
+    # - "group_k_fold":
+    #     n_splits: 5
+    # - "group_k_fold":
+    #     n_splits: 10
+    # # - "k_fold":
+    # #     n_splits: 5
+    # #     shuffle: True
+    # #     random_state: 42
+    # - "k_fold":
+    #     n_splits: 5
+    #     shuffle: False
+    #     random_state: 42
+  cv_methods_inner:
+    - "no_inner_cv":
+        null
+    # - "GridSearchCV":
+    #    null
+  estimators:
+    ### Categorical classification
+    ## LOSO outer --> different model types
+    ## KNN ##
+    - type: "KNN"
+      grid:
+        leaf_size: 30
+        n_neighbors: 5
+        p: 2
+        weights: "uniform"
+      problem_type: "classification"
+      grid_description: "default"
+    - type: "KNN"
+      grid:
+        leaf_size: 20
+        n_neighbors: 3
+        p: 2
+        weights: "uniform"
+      problem_type: "classification"
+      grid_description: "lower"
+    - type: "KNN"
+      grid:
+        leaf_size: 40
+        n_neighbors: 7
+        p: 2
+        weights: "uniform"
+      problem_type: "classification"
+      grid_description: "higher"
+    - type: "KNN"
+      grid:
+        leaf_size: 30
+        n_neighbors: 5
+        p: 2
+        weights: "distance"
+      problem_type: "classification"
+      grid_description: "default-distance"
+    ## SVC ##
+    - type: "SVC"
+      grid:
+        C: 1
+        gamma: "scale"
+        kernel: "rbf"
+        class_weight: "balanced"
+      problem_type: "classification"
+      grid_description: "default-class_weight_balanced"
+    - type: "SVC"
+      grid:
+        C: 0.1
+        gamma: "scale"
+        kernel: "rbf"
+        class_weight: "balanced"
+      problem_type: "classification"
+      grid_description: "default-c_0.1-class_weight_balanced"
+    - type: "SVC"
+      grid:
+        C: 3
+        gamma: "scale"
+        kernel: "rbf"
+        class_weight: "balanced"
+      problem_type: "classification"
+      grid_description: "default-c_3-class_weight_balanced"
+    # - type: "SVC"
+    #   grid:
+    #     C: 1
+    #     gamma: "scale"
+    #     kernel: "linear"
+    #     class_weight: "balanced"
+    #   problem_type: "classification"
+    #   grid_description: "default-linear-class_weight_balanced"
+    # - type: "SVC"
+    #   grid:
+    #     C: 0.1
+    #     gamma: "scale"
+    #     kernel: "linear"
+    #     class_weight: "balanced"
+    #   problem_type: "classification"
+    #   grid_description: "default-linear-c_0.1-class_weight_balanced"
+    # - type: "SVC"
+    #   grid:
+    #     C: 3
+    #     gamma: "scale"
+    #     kernel: "linear"
+    #     class_weight: "balanced"
+    #   problem_type: "classification"
+    #   grid_description: "default-linear-c_3-class_weight_balanced"
+    - type: "SVC"
+      grid:
+        C: 1
+        gamma: "scale"
+        kernel: "poly"
+        class_weight: "balanced"
+      problem_type: "classification"
+      grid_description: "default-poly-class_weight_balanced"
+    - type: "SVC"
+      grid:
+        C: 0.1
+        gamma: "scale"
+        kernel: "poly"
+        class_weight: "balanced"
+      problem_type: "classification"
+      grid_description: "default-poly-c_0.1-class_weight_balanced"
+    - type: "SVC"
+      grid:
+        C: 3
+        gamma: "scale"
+        kernel: "poly"
+        class_weight: "balanced"
+      problem_type: "classification"
+      grid_description: "default-poly-c_3-class_weight_balanced"
+    # - type: "SVC"
+    #   grid:
+    #     C: [3, 1, 0.5, 0.01, 0.0001]
+    #     gamma: ["scale"]
+    #     kernel: ["linear", "poly", "rbf"]
+    #     class_weight: ["balanced"]
+    #   problem_type: "classification"
+    #   grid_description: "c_kernel-MS"
+    ## Random Forest ##
+    # - type: "RandomForestClassifier"
+    #   grid:
+    #     n_estimators: [100]
+    #     criterion: ["gini"]
+    #     min_samples_split: [2]
+    #     random_state: [42]
+    #     class_weight: [null]  # "balanced"
+    #   problem_type: "classification"
+    #   grid_description: "default"
+    # - type: "RandomForestClassifier"
+    #   grid:
+    #     n_estimators: [100]
+    #     criterion: ["gini"]
+    #     min_samples_split: [2]
+    #     random_state: [42]
+    #     class_weight: ["balanced"]  # null
+    #   problem_type: "classification"
+    #   grid_description: "default_balanced"    
+    ## XGBoost ##
+    - type: "XGBClassifier"
+      grid:
+        learning_rate: 0.3
+        max_depth: 6
+        gamma: 0
+        min_child_weight: 1
+      problem_type: "classification"
+      grid_description: "default"
+    - type: "XGBClassifier"
+      grid:
+        learning_rate: 0.01
+        max_depth: 6
+        gamma: 0
+        min_child_weight: 1
+      problem_type: "classification"
+      grid_description: "default-lower_learning_rate"
+    - type: "XGBClassifier"
+      grid:
+        learning_rate: 0.7
+        max_depth: 6
+        gamma: 0
+        min_child_weight: 1
+      problem_type: "classification"
+      grid_description: "default-higher_learning_rate"

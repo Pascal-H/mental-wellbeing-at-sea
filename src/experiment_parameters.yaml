@@ -1,0 +1,192 @@
+database:
+  type: "local"
+  # The DataFrame in data_mwas_processed-final_data-only_weekly contains less columns but the same amount of rows than this one
+  path_df_meta: "/data/share/aisoundlab-mental_wellbeing_at_sea/data_mwas_processed-final_data/final_data-df_files.csv"
+  index_column: ["file"]
+  # To be left empty if the DataFrame already contains the audio file paths
+  # Otherwise, path_data will be joined to "file" in the DataFrame
+  path_data: "/data/share/aisoundlab-mental_wellbeing_at_sea/data_mwas_processed-final_data/raw/pilot-mental_wellbeing_at_sea"
+  # Filter out participants that have less OR EQUAL than n sessions
+  min_sessions: 1
+  # Filter out practice prompts
+  discard_prompts: ["sustained_utterance_0113", "emotion_acting_3130", "emotion_acting_5177", "emotion_acting_2017"]
+
+paths:
+  cache_features: "data/processed/cache/features"
+  cache_vad: "data/processed/cache/vad"
+  cache_split: "data/processed/cache/splitting"
+  results_modelling: "results/modelling"
+
+AudioProcessor:
+  meta:
+    num_workers: 10
+  preprocessing:
+    denoising:
+      no_denoising: null
+    loudness_normalization:
+      no_loudness_normalization: null
+      LUFS:
+        target_lufs: -24
+  vad:
+    no_vad: null
+    auvad:
+      # default settings
+      min_turn_length: 0.76
+      max_turn_length: 6.0
+      n_pre: 15
+      n_post: 25
+      invert: False
+
+FeatureExtractor:
+  meta:
+    num_workers: 10
+  feature_sets:
+    ComParE_2016: null
+    eGeMAPSv02: null
+
+DataProcessor:
+  meta:
+    try_load_existing_split: False
+  splitting:
+    fixed_test_speakers:
+      test_speakers: ['9f9ab51a-8f08-5849-7c05-79d62b13547a', '438cf652-7363-66be-3082-1e0c831a15b3', '16a6213f-fe81-de19-b8db-2aed14244e82', '76241337-a906-782a-7476-f73763ba0f29', '86060b2c-88c0-8c54-bfdc-dabbf2bdd9fd']
+    # splitutils_traintest:
+    #   # TODO: has to be aligned with the target variable below
+    #   target: "stress_current"
+    #   variable_type: "continuous"  # "categorical" or "continuous"
+    #   split_on: "participant_code"
+    #   stratif_cols:
+    #     # binning(num_strat_vars, nbins=10)
+    #     - "stress_current"
+    #     # binning(num_strat_vars, nbins=3)
+    #     - "age"
+    #   weights:
+    #     "stress_current": 2
+    #     "age": 1
+    #   test_size: 0.2
+    #   k: 30_000
+    #   seed: 42
+
+ModelTrainer:
+  meta:
+      num_workers: 20
+      predict_proba: False  # True
+      groups: "participant_code"
+      sessions: "session"
+      # Save also the features and labels
+      save_full_data: False
+  cohorts:
+    - "all"
+  speech_tasks:
+    - "standardized_tasks":
+        ["work_tasks_4718", "sustained_utterance_7351", "emotion_acting_5839", "emotion_acting_4373", "count_9822"]
+    - "spontaneous-work_tasks":
+        ["work_tasks_4718"]
+    - "sustained_utterance-a":
+        ["sustained_utterance_7351"]
+    - "nilago-neutral":
+        ["emotion_acting_5839"]
+    - "nilago-happy":
+        ["emotion_acting_4373"]
+    - "counting":
+        ["count_9822"]
+    # - "all":
+    #     null
+  feature_selections:
+    # - type: "logistic_regression"
+    #   max_iter: 10_000
+    - type: "no_feature_selection"
+  feature_normalizations:
+    - "sklearn_standard_scaler"
+    # - "z_score_normalization"  # same as StandardScaler!
+  target_variables:
+    # - "pss_10_total_score_category"
+    # - "who_5_total_score_category"
+    - "stress_current"
+    # - "stress_work_tasks"
+    # - "pss_10_total_score"
+    # - "who_5_percentage_score_corrected"
+    # - "emotions_current_happy"
+    # - "emotions_current_sad"
+    # - "emotions_current_anger"
+    # - "emotions_current_fear"
+    # - "emotions_current_indifference"
+    # - "emotions_current_shame"
+  cv_strategies_outer:
+    # - "fixed_test_set":
+    #     null
+    - "loso":
+        null
+  cv_strategies_inner:
+    - "loso":
+        null
+    # - "stratified_group_k_fold":
+    #     n_splits: 5
+    #     shuffle: False
+    #     random_state: null
+    # - "group_k_fold":
+    #     n_splits: 5
+    # - "group_k_fold":
+    #     n_splits: 15
+    # # - "k_fold":
+    # #     n_splits: 5
+    # #     shuffle: True
+    # #     random_state: 42
+    # - "k_fold":
+    #     n_splits: 5
+    #     shuffle: False
+    #     random_state: 42
+  cv_methods_inner:
+    - "GridSearchCV":
+       null
+  estimators:
+    - type: "LinearRegression"
+      grid:
+        fit_intercept: [True, False]
+      problem_type: "regression"
+      grid_description: "fit_intercept"
+    - type: "RandomForestRegressor"
+      grid:
+        n_estimators: [50, 100, 200, 300, 400, 500]
+        max_depth: [3, 4, 5, 6, 7]
+        max_features: [3, 4, 5, 6, 7]
+      problem_type: "regression"
+      grid_description: "n_estimators_max_depth_max_features"
+    - type: "SVR"
+      grid:
+        C: [1.5, 2, 3, 1, 0.5, 0.005, 0.01, 0.001, 0.0001]
+        gamma: ["scale", "auto"]
+        "epsilon": [0.1, 1, 0.01]
+        kernel: ["linear", "poly", "rbf", "sigmoid"]
+      problem_type: "regression"
+      grid_description: "c_gamma_epsilon_kernel-MS"
+    #  # Categorical classification
+    # - type: "KNN"
+    #   grid:
+    #     leaf_size: [20, 23, 26, 29, 32, 35, 38, 41]
+    #     n_neighbors: [1, 4, 7, 10, 13, 16]
+    #     p: [2, 3]
+    #     weights: ["uniform", "distance"]
+    #   problem_type: "classification"
+    #   grid_description: "leaf_size_n_neighbors_p_weights"
+    # - type: "SVC"
+    #   grid:
+    #     C: [1.5, 2, 3, 1, 0.5, 0.005, 0.01, 0.001, 0.0001]
+    #     gamma: ["scale", "auto"]
+    #     kernel: ["linear", "poly", "rbf", "sigmoid"]
+    #     # class_weight: "balanced"
+    #   problem_type: "classification"
+      # grid_description: "c_gamma_kernel-MS"
+    # Not implemented yet! Example for XBBoost grid
+      #   # Number of trees in XGBoost
+      # "n_estimators": [50, 100],
+      # # Maximum number of levels in tree
+      # "max_depth": [2, 5],
+      # # Minimum number of instances needed in each node
+      # "min_child_weight": [1, 5],
+      # # Learning rate
+      # "learning_rate": [0.01, 0.1],
+      # # Subsample ratio of the training instances
+      # # "subsample": [0.5, 1],
+      # # Regularization parameters
+      # "gamma": [0.5, 1],

@@ -1,0 +1,20 @@
+flowchart TD
+  subgraph "Oil tanker"
+    mobile1("Device\n1")
+    mobile2("Device\n2")
+    mobilen("Device\nN")
+    subgraph "Platform&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+      Backend["Frontend\nBackend"]
+      db[(Database)]
+      Backup[(Backup)]
+      Backend .-> db
+      db -. "Periodic\nConversion\nEncryption".-> Backup
+    end
+    mobile1 .-> Backend
+    mobile2 .-> Backend
+    mobilen .-> Backend
+  end
+  subgraph "On Land&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+    dbaud[(NAS)]
+  end
+  Backup -. "Secure\ntransfer" .-> dbaud
