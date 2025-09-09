@@ -1,0 +1,45 @@
+# Core Python packages
+numpy==1.23.5
+pandas==1.5.3
+
+# Audio processing
+audiofile==1.2.1
+librosa==0.10.0
+sox==1.4.1
+noisereduce==2.0.1
+
+# audEERING packages
+audeer==1.19.0
+audinterface==0.10.2
+audmodel==1.0.7
+audonnx==0.7.0
+auvad==0.7.1
+auglib==0.11.2
+
+# PyTorch
+torch==2.7.0
+torchaudio==2.7.0
+
+# Speech processing
+openai-whisper==20250625
+
+# VAD and audio analysis
+pyannote.audio
+
+# Denoising
+denoiser==0.1.5
+open-universe==0.1.dev5+g939dd3c
+
+# Data visualization
+matplotlib==3.7.1
+seaborn==0.12.2
+
+# Configuration and utilities
+PyYAML==6.0
+
+# DevAIce
+devaice==3.12.0
+
+#Jupyter notebook
+ipykernel==6.21.3
+ipython==8.11.0
