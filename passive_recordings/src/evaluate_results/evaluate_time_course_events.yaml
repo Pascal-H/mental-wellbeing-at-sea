@@ -1,0 +1,35 @@
+# Anonymized
+land_and_sea:
+  land:
+    - start: "2022-xx-xx xx:xx:xx"
+      end: "2022-xx-xx xx:xx:xx"
+      location: "xx"
+    - start: "2023-xx-xx xx:xx:xx"
+      end: "2023-xx-xx xx:xx:xx"
+      location: "xx"
+    - start: "2023-xx-30 15:xx:xx"
+      end: "2023-xx-xx xx:xx:xx"
+      location: "xx"
+  sea:
+    - start: "2022-xx-xx xx:xx:xx"
+      end: "2023-xx-xx xx:xx:xx"
+      location: "sea"
+    - start: "2023-xx-xx xx:xx:xx"
+      end: "2023-xx-xx xx:xx:xx"
+      location: "sea"
+    - start: "2023-xx-xx xx:xx:xx"
+      end: "2023-xx-xx xx:xx:xx"
+      location: "sea"
+
+loading_and_discharge:
+  loading:
+    - start: "2022-xx-xx xx:xx:xx"
+      end: "2022-xx-xx xx:xx:xx"
+      location: "xx"
+    - start: "2023-xx-xx xx:xx:xx"
+      end: "2023-xx-xx xx:xx:xx"
+      location: "xx"
+  discharge:
+    - start: "2023-xx-xx xx:xx:xx"
+      end: "2023-xx-xx xx:xx:xx"
+      location: "xx"

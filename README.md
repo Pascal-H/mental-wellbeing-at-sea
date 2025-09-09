@@ -7,7 +7,11 @@ In Proceedings of the 18th International Joint Conference on Biomedical Engineer
 ISBN: 978-989-758-731-3; ISSN: 2184-4305
 
 
-## Publication
+Further, it contains the material for the publication under review "Mental Wellbeing at Sea: Active and Passive Speech Monitoring in a Maritime Setting".  
+The associated material and its own README can be found under [passive_recordings/](passive_recordings/).
+
+
+## Publication (HEALTHINF)
 
 The figures presented in the publication are residing in the [figures/](notebooks/mwas/figures) folder, which was mostly composed with the Jupyter notebook [paper-plots_survey_responses.ipynb](notebooks/mwas/paper-plots_survey_responses.ipynb).  
 The central table with the significantly correlating features is [paper-significantly_correlating_features.csv](notebooks/mwas/data/feature_analysis/paper-significantly_correlating_features.csv).  
