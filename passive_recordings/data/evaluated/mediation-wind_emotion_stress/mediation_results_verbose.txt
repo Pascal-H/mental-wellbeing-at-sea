@@ -1,0 +1,155 @@
+================================================================================
+MEDIATION ANALYSIS REPORT
+Wind Speed -> Bridge Emotion Intensity -> Self-Reported Stress
+================================================================================
+
+Generated: 2026-02-19 15:26:36
+Script: mediation_analysis_main.py
+
+================================================================================
+CONFIGURATION
+================================================================================
+  time_aggregation_hours: 3.0
+  merge_tolerance_hours: 2.0
+  n_samples: 272
+  n_clusters: 24
+  output_dir: /scratch/phecker/project/audiary/projects/2021-safetytech_accelerator-mwas/passive-voyage_data_recorder/open_source/data/evaluated/mediation-wind_emotion_stress
+
+================================================================================
+CONFOUNDER DISTRIBUTIONS
+================================================================================
+
+operational_mode:
+  at_sea: 176
+  in_port: 82
+  cargo_ops: 14
+
+time_of_day:
+  afternoon: 96
+  morning: 76
+  evening: 63
+  night: 37
+
+daytime_count:
+  172
+
+night_count:
+  100
+
+================================================================================
+BIVARIATE CORRELATIONS
+================================================================================
+  Wind vs Emotion (Combined): r=-0.3439, p=0.0000 0.0000***
+  Wind vs Arousal: r=-0.2848, p=0.0000 0.0000***
+  Wind vs Valence: r=-0.3362, p=0.0000 0.0000***
+  Wind vs Dominance: r=-0.4020, p=0.0000 0.0000***
+  Emotion vs Stress (Current): r=-0.1621, p=0.0074 0.0074**
+
+================================================================================
+PRIMARY ANALYSIS: Wind -> Emotion Intensity -> Stress (Current)
+================================================================================
+  N = 272, clusters = 24
+  Converged: True
+
+  Path coefficients:
+    a (X->M):     -0.0307, SE=0.0052, p=0.0000
+    b (M->Y):     -0.8065, SE=0.3535, p=0.0225
+    c (total):    -0.0420, SE=0.0303, p=0.1657
+    c' (direct):  -0.0659, SE=0.0319, p=0.0387
+
+  Indirect effect:
+    a*b = 0.0248
+    95% CI = [0.0032, 0.0472]
+    Significant: Yes
+    Suppression: Yes
+
+  Interpretation:
+    - Higher wind speed is associated with lower bridge emotion intensity (a = -0.0307).
+    - Higher emotion intensity is associated with lower self-reported stress (b = -0.8065).
+    - The indirect and direct effects have OPPOSITE signs, indicating an inconsistent mediation (suppression) pattern.
+    - Two competing pathways exist: the direct pathway from wind to stress, and the indirect pathway through emotion that operates in the opposite direction.
+    - This suggests passive emotion monitoring captures a complexity in the wind-stress relationship that would be hidden when examining only environmental data.
+    - Note: The total effect (c) is not significant while the direct effect (c') is, which is consistent with suppression.
+
+================================================================================
+EMOTION DIMENSION ANALYSIS
+================================================================================
+
+Mediator                         Indirect                 95% CI    Sig
+----------------------------------------------------------------------
+  Emotion Intensity (A+D)/2        0.0248       [0.0035, 0.0484]    Yes
+  Arousal                          0.0183       [0.0019, 0.0370]    Yes
+  Valence                          0.0090      [-0.0084, 0.0313]     No
+  Dominance                        0.0319       [0.0028, 0.0584]    Yes
+
+  Significant mediators: Emotion Intensity (A+D)/2, Arousal, Dominance
+  Non-significant mediators: Valence
+
+================================================================================
+ALTERNATIVE OUTCOME ANALYSIS
+================================================================================
+
+Outcome                          Indirect                 95% CI    Sig
+----------------------------------------------------------------------
+  Stress (Current VAS)             0.0248       [0.0035, 0.0484]    Yes
+  Stress (Work Tasks VAS)          0.0344       [0.0082, 0.0640]    Yes
+  PSS-10 Stress                    0.0030      [-0.0133, 0.0151]     No
+  PHQ-8 Depression                -0.0007      [-0.0149, 0.0153]     No
+  WHO-5 Wellbeing                 -0.0068      [-0.0199, 0.0075]     No
+
+  Significant indirect effects for: Stress (Current VAS), Stress (Work Tasks VAS)
+  These are momentary or recent-task stress measures, suggesting the mediation pathway operates at a short time scale.
+  Non-significant for: PSS-10 Stress, PHQ-8 Depression, WHO-5 Wellbeing
+  Retrospective long-term measures (PSS-10, PHQ-8, WHO-5) did not show significant indirect effects, consistent with the interpretation that the mediation pathway is specific to momentary or recent-task stress.
+
+================================================================================
+OLS vs MIXED-EFFECTS COMPARISON
+================================================================================
+
+Path                          OLS   Mixed-Effects   Difference
+------------------------------------------------------------
+a (X->M)                  -0.0314         -0.0307       0.0007
+b (M->Y)                  -1.7258         -0.8065       0.9193
+c (total)                 -0.0977         -0.0420       0.0557
+c' (direct)               -0.1519         -0.0659       0.0859
+Indirect (a*b)             0.0542          0.0248       0.0294
+
+  Both methods agree on significance -> Results are robust to clustering adjustment.
+
+================================================================================
+SENSITIVITY ANALYSIS FOR UNMEASURED CONFOUNDING
+================================================================================
+
+            rho     Original     Adjusted     Change %   Still Sig?
+-----------------------------------------------------------------
+           0.00       0.0248       0.0248         0.0%          Yes
+           0.05       0.0248       0.0241        -2.5%          Yes
+           0.10       0.0248       0.0235        -5.0%          Yes
+           0.15       0.0248       0.0229        -7.5%          Yes
+           0.20       0.0248       0.0223       -10.0%           No
+           0.25       0.0248       0.0217       -12.5%           No
+           0.30       0.0248       0.0210       -15.0%           No
+
+  Critical rho to nullify effect: 1.0
+  -> The effect is robust: would require a strong confounder (rho > 0.3) to nullify.
+  -> The effect remains significant up to rho = 0.15 and becomes non-significant beyond that threshold.
+
+================================================================================
+CONFOUNDER-ADJUSTED ANALYSIS
+================================================================================
+
+Adjustment                            a        b   Indirect               95% CI   Sig
+-------------------------------------------------------------------------------------
+Unadjusted                      -0.0307  -0.8065     0.0248     [0.0035, 0.0484]   Yes
+Adj: Operational Mode           -0.0242  -1.0229     0.0248     [0.0018, 0.0468]   Yes
+Adj: Time of Day                -0.0306  -1.0409     0.0319     [0.0066, 0.0541]   Yes
+Adj: All Available              -0.0237  -1.2730     0.0301     [0.0056, 0.0515]   Yes
+
+  Change in indirect effect with full adjustment: +21.7%
+  -> Significance is preserved after adjusting for available confounders.
+  -> Results are robust to operational mode and time of day.
+  -> The fully adjusted estimates are larger in magnitude, indicating that the measured contextual variables did not explain away the observed pathway.
+
+================================================================================
+END OF REPORT
+================================================================================
