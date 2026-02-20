@@ -1,0 +1,102 @@
+========================================================================
+CONFOUNDER ANALYSIS REPORT
+Wind Speed, SNR, and Denoising Effects on Emotion Predictions
+========================================================================
+
+Generated: 2026-02-19 15:54:31
+Script: confounder_noise_denoising_main.py
+Time block: 3h
+
+========================================================================
+PART 1: WIND SPEED vs SNR
+========================================================================
+  Pearson r:  -0.3150
+  p-value:    0.000000 ***
+  r-squared:  0.0992 (9.9% variance explained)
+  N blocks:   250
+  Wind speed: M = 12.65, SD = 6.36 m/s
+  SNR:        M = 6.77, SD = 0.82 dB
+
+  Interpretation:
+    Higher wind speeds are associated with lower SNR (more ambient noise).
+    Wind speed explains approximately 10% of SNR variance.
+
+  Stratified by operational context:
+    sea         : r = -0.3962, p = 0.0000 ***, r^2 = 0.1570, N = 141
+    port        : r = +0.1017, p = 0.3432  ns, r^2 = 0.0103, N = 89
+    operations  : r = +0.6763, p = 0.0015  **, r^2 = 0.4574, N = 19
+
+    At sea: wind substantially degrades audio quality (r = -0.40).
+    In port: wind-SNR relationship not significant (structural shielding).
+    Operations: positive correlation (r = 0.68) suggests machinery noise dominates.
+
+========================================================================
+PART 2: DENOISING EFFECT ON EMOTION PREDICTIONS
+========================================================================
+
+  Intensity:
+    Denoised:     M = 0.3946, SD = 0.0237
+    Non-denoised: M = 0.3696, SD = 0.0533
+    Diff (den - noden): +0.0250 (SD = 0.0508)
+    Paired t-test: t = 8.598, p = 0.000000 ***
+    Cohen's d: 0.4931 (small)
+    Correlation: r = 0.3282, p = 0.000000
+
+  Arousal:
+    Denoised:     M = 0.3907, SD = 0.0264
+    Non-denoised: M = 0.3596, SD = 0.0646
+    Diff (den - noden): +0.0311 (SD = 0.0612)
+    Paired t-test: t = 8.850, p = 0.000000 ***
+    Cohen's d: 0.5076 (medium)
+    Correlation: r = 0.3334, p = 0.000000
+
+  Dominance:
+    Denoised:     M = 0.3986, SD = 0.0219
+    Non-denoised: M = 0.3795, SD = 0.0438
+    Diff (den - noden): +0.0190 (SD = 0.0426)
+    Paired t-test: t = 7.786, p = 0.000000 ***
+    Cohen's d: 0.4466 (small)
+    Correlation: r = 0.3072, p = 0.000000
+
+  Valence:
+    Denoised:     M = 0.4239, SD = 0.0156
+    Non-denoised: M = 0.4617, SD = 0.1061
+    Diff (den - noden): -0.0378 (SD = 0.1029)
+    Paired t-test: t = -6.401, p = 0.000000 ***
+    Cohen's d: -0.3671 (small)
+    Correlation: r = 0.2812, p = 0.000001
+
+  Interpretation:
+    Denoising slightly INCREASES predicted emotion intensity.
+    Denoising reduces arousal prediction variance (SD: 0.0646 -> 0.0264, ~59% reduction).
+    Block-wise correlation (den vs noden, intensity): r = 0.33, suggesting both versions capture similar temporal patterns.
+
+========================================================================
+PART 3: WIND- AND SNR-DEPENDENT DENOISING BIAS
+========================================================================
+
+  Wind speed vs denoising effect:
+    intensity   : r = +0.1590, p = 0.0118   *, r^2 = 0.0253 (2.5%)
+    arousal     : r = +0.2204, p = 0.0004 ***, r^2 = 0.0486 (4.9%)
+    dominance   : r = +0.0670, p = 0.2911  ns, r^2 = 0.0045 (0.4%)
+    valence     : r = +0.0806, p = 0.2043  ns, r^2 = 0.0065 (0.6%)
+
+  SNR vs denoising effect:
+    intensity   : r = -0.1677, p = 0.0079  **, r^2 = 0.0281 (2.8%)
+    arousal     : r = -0.2240, p = 0.0004 ***, r^2 = 0.0502 (5.0%)
+    dominance   : r = -0.0822, p = 0.1951  ns, r^2 = 0.0068 (0.7%)
+    valence     : r = -0.2398, p = 0.0001 ***, r^2 = 0.0575 (5.8%)
+
+  Stratified: intensity diff vs wind by location:
+    sea         : r = +0.1388, p = 0.1007  ns, N = 141
+    port        : r = +0.0922, p = 0.3899  ns, N = 89
+
+  Interpretation:
+    Wind speed shows a statistically significant but small correlation with the denoising effect (r = 0.16, r^2 = 2.5%).
+    This explains only 2.5% of variance in the denoising effect and is unlikely to meaningfully confound results.
+    Stratified analyses show no significant wind-dependent bias within sea or port contexts, suggesting that the weak overall association is not driven by one operational state.
+    SNR shows a negative correlation with the denoising effect (r = -0.17), indicating that denoising has a larger impact in low-SNR conditions. This is consistent with intended noise-reduction behaviour.
+
+========================================================================
+END OF REPORT
+========================================================================
