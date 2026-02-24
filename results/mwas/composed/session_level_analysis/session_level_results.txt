@@ -1,0 +1,187 @@
+Paper configurations: 20
+Existing session-level CCC (concordance_cc-test-agg-average) found - will validate against it.
+
+================================================================================
+Config 1/20: who_5_percentage_score_corrected | eGeMAPSv02... | speechtasks-nilago-happy | denoised
+  Segments: 350, Participants: 25
+  Segment:  CCC=0.354083  CI=[0.027664, 0.567943]  N=350  Paper=MATCH
+  Session:  CCC=0.363824  CI=[-0.044603, 0.590668]  N=269  vs existing=0.363824 MATCH
+  Delta session-segment: +0.009741
+================================================================================
+Config 2/20: who_5_percentage_score_corrected | wav2vec2-variant-wav2vec2-larg... | speechtasks-sustained_utterance-a | denoised
+  Segments: 154, Participants: 15
+  Segment:  CCC=0.348391  CI=[0.012134, 0.539457]  N=154  Paper=MATCH
+  Session:  CCC=0.238113  CI=[-0.015007, 0.452820]  N=104  vs existing=0.238113 MATCH
+  Delta session-segment: -0.110278
+================================================================================
+Config 3/20: who_5_percentage_score_corrected | eGeMAPSv02... | speechtasks-nilago-happy | noisy
+  Segments: 380, Participants: 25
+  Segment:  CCC=0.361475  CI=[0.031440, 0.514476]  N=380  Paper=MATCH
+  Session:  CCC=0.350369  CI=[0.019678, 0.515335]  N=290  vs existing=0.350369 MATCH
+  Delta session-segment: -0.011106
+================================================================================
+Config 4/20: who_5_percentage_score_corrected | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-neutral | noisy
+  Segments: 376, Participants: 25
+  Segment:  CCC=0.288002  CI=[0.063689, 0.481959]  N=376  Paper=MATCH
+  Session:  CCC=0.340419  CI=[0.088999, 0.497717]  N=272  vs existing=0.340419 MATCH
+  Delta session-segment: +0.052417
+================================================================================
+Config 5/20: pss_10_total_score | eGeMAPSv02... | speechtasks-spontaneous-work_tasks | denoised
+  Segments: 988, Participants: 23
+  Segment:  CCC=0.082212  CI=[-0.099834, 0.276044]  N=988  Paper=MATCH
+  Session:  CCC=0.114707  CI=[-0.184313, 0.315105]  N=227  vs existing=0.114707 MATCH
+  Delta session-segment: +0.032496
+================================================================================
+Config 6/20: pss_10_total_score | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-neutral | denoised
+  Segments: 292, Participants: 25
+  Segment:  CCC=0.162778  CI=[-0.160369, 0.336582]  N=292  Paper=MATCH
+  Session:  CCC=0.172311  CI=[-0.122455, 0.402716]  N=208  vs existing=0.172311 MATCH
+  Delta session-segment: +0.009534
+================================================================================
+Config 7/20: pss_10_total_score | eGeMAPSv02... | speechtasks-spontaneous-work_tasks | noisy
+  Segments: 1326, Participants: 25
+  Segment:  CCC=0.098678  CI=[-0.082959, 0.261394]  N=1326  Paper=MATCH
+  Session:  CCC=0.151166  CI=[-0.113080, 0.360953]  N=280  vs existing=0.151166 MATCH
+  Delta session-segment: +0.052488
+================================================================================
+Config 8/20: pss_10_total_score | wav2vec2-variant-wav2vec2-larg... | speechtasks-spontaneous-work_tasks | noisy
+  Segments: 1326, Participants: 25
+  Segment:  CCC=0.117312  CI=[0.020579, 0.236165]  N=1326  Paper=MATCH
+  Session:  CCC=0.250923  CI=[0.058861, 0.402575]  N=280  vs existing=0.250923 MATCH
+  Delta session-segment: +0.133611
+================================================================================
+Config 9/20: phq_8_total_score | eGeMAPSv02... | speechtasks-sustained_utterance-a | denoised
+  Segments: 153, Participants: 14
+  Segment:  CCC=0.064470  CI=[-0.164220, 0.318883]  N=153  Paper=MATCH
+  Session:  CCC=0.021402  CI=[-0.278219, 0.277513]  N=103  vs existing=0.021402 MATCH
+  Delta session-segment: -0.043068
+================================================================================
+Config 10/20: phq_8_total_score | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-happy | denoised
+  Segments: 348, Participants: 25
+  Segment:  CCC=0.194951  CI=[-0.037036, 0.383240]  N=348  Paper=MATCH
+  Session:  CCC=0.171450  CI=[-0.052023, 0.345443]  N=268  vs existing=0.171450 MATCH
+  Delta session-segment: -0.023501
+================================================================================
+Config 11/20: phq_8_total_score | eGeMAPSv02... | speechtasks-nilago-happy | noisy
+  Segments: 378, Participants: 25
+  Segment:  CCC=0.096189  CI=[-0.068599, 0.235408]  N=378  Paper=MATCH
+  Session:  CCC=0.106344  CI=[-0.060805, 0.267038]  N=289  vs existing=0.106344 MATCH
+  Delta session-segment: +0.010155
+================================================================================
+Config 12/20: phq_8_total_score | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-happy | noisy
+  Segments: 378, Participants: 25
+  Segment:  CCC=0.212767  CI=[-0.002674, 0.377122]  N=378  Paper=MATCH
+  Session:  CCC=0.207540  CI=[-0.010477, 0.361362]  N=289  vs existing=0.207540 MATCH
+  Delta session-segment: -0.005227
+================================================================================
+Config 13/20: stress_current | eGeMAPSv02... | speechtasks-nilago-happy | denoised
+  Segments: 399, Participants: 25
+  Segment:  CCC=0.112093  CI=[-0.056264, 0.284551]  N=399  Paper=MATCH
+  Session:  CCC=0.107024  CI=[-0.029322, 0.310981]  N=314  vs existing=0.107024 MATCH
+  Delta session-segment: -0.005069
+================================================================================
+Config 14/20: stress_current | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-happy | denoised
+  Segments: 399, Participants: 25
+  Segment:  CCC=0.178202  CI=[0.033416, 0.313354]  N=399  Paper=MATCH
+  Session:  CCC=0.175953  CI=[0.010493, 0.325682]  N=314  vs existing=0.175953 MATCH
+  Delta session-segment: -0.002250
+================================================================================
+Config 15/20: stress_current | eGeMAPSv02... | speechtasks-sustained_utterance-a | noisy
+  Segments: 210, Participants: 17
+  Segment:  CCC=0.151496  CI=[-0.142205, 0.364083]  N=210  Paper=MATCH
+  Session:  CCC=0.179789  CI=[-0.125307, 0.422452]  N=150  vs existing=0.179789 MATCH
+  Delta session-segment: +0.028293
+================================================================================
+Config 16/20: stress_current | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-happy | noisy
+  Segments: 431, Participants: 25
+  Segment:  CCC=0.193889  CI=[0.042006, 0.320430]  N=431  Paper=MATCH
+  Session:  CCC=0.198551  CI=[0.047913, 0.331665]  N=336  vs existing=0.198551 MATCH
+  Delta session-segment: +0.004662
+================================================================================
+Config 17/20: stress_work_tasks | eGeMAPSv02... | speechtasks-sustained_utterance-a | denoised
+  Segments: 172, Participants: 15
+  Segment:  CCC=0.237528  CI=[0.039963, 0.372818]  N=172  Paper=MATCH
+  Session:  CCC=0.262171  CI=[-0.066063, 0.422651]  N=122  vs existing=0.262171 MATCH
+  Delta session-segment: +0.024643
+================================================================================
+Config 18/20: stress_work_tasks | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-happy | denoised
+  Segments: 399, Participants: 25
+  Segment:  CCC=0.214165  CI=[0.040176, 0.307733]  N=399  Paper=MATCH
+  Session:  CCC=0.214291  CI=[-0.004196, 0.374055]  N=314  vs existing=0.214291 MATCH
+  Delta session-segment: +0.000126
+================================================================================
+Config 19/20: stress_work_tasks | eGeMAPSv02... | speechtasks-sustained_utterance-a | noisy
+  Segments: 210, Participants: 17
+  Segment:  CCC=0.305632  CI=[-0.069905, 0.498890]  N=210  Paper=MATCH
+  Session:  CCC=0.321858  CI=[-0.075174, 0.557273]  N=150  vs existing=0.321858 MATCH
+  Delta session-segment: +0.016226
+================================================================================
+Config 20/20: stress_work_tasks | wav2vec2-variant-wav2vec2-larg... | speechtasks-nilago-happy | noisy
+  Segments: 431, Participants: 25
+  Segment:  CCC=0.212011  CI=[0.031604, 0.310605]  N=431  Paper=MATCH
+  Session:  CCC=0.219835  CI=[-0.004189, 0.379186]  N=336  vs existing=0.219835 MATCH
+  Delta session-segment: +0.007824
+
+Detailed results: /data/phecker/project/audiary/projects/prompt-performance/modelling-static/results/mwas/composed/session_level_analysis/session_level_results.csv
+Publication CSV: /data/phecker/project/audiary/projects/prompt-performance/modelling-static/results/mwas/composed/session_level_analysis/compiled-session_level-paper_configs.csv
+
+================================================================================
+VALIDATION
+================================================================================
+  Segment CCC vs paper: 20/20 match
+  Session CCC vs existing agg-average: 20/20 match
+
+================================================================================
+SUMMARY: SEGMENT vs SESSION LEVEL CCC
+================================================================================
+
+  Segment: Mean CCC = 0.1993  (SD: 0.0931)  Significant: 10/20
+  Session: Mean CCC = 0.2084  (SD: 0.0897)  Significant: 5/20
+
+  Delta session-segment: mean=+0.0091  (range: -0.1103 to +0.1336)
+    Session > Segment: 13/20 configs
+
+--- Per target ---
+
+  who_5_percentage_score_corrected:
+    Segment: 0.3380  (sig: 4/4)
+    Session: 0.3232  (sig: 2/4)  delta: -0.0148
+      [denoised | eGeMAPSv02     ]  seg=0.3541*  sess=0.3638   CI=[-0.0446, 0.5907]
+      [denoised | wav2vec2-varian]  seg=0.3484*  sess=0.2381   CI=[-0.0150, 0.4528]
+      [noisy    | eGeMAPSv02     ]  seg=0.3615*  sess=0.3504*  CI=[0.0197, 0.5153]
+      [noisy    | wav2vec2-varian]  seg=0.2880*  sess=0.3404*  CI=[0.0890, 0.4977]
+
+  pss_10_total_score:
+    Segment: 0.1152  (sig: 1/4)
+    Session: 0.1723  (sig: 1/4)  delta: +0.0570
+      [denoised | eGeMAPSv02     ]  seg=0.0822   sess=0.1147   CI=[-0.1843, 0.3151]
+      [denoised | wav2vec2-varian]  seg=0.1628   sess=0.1723   CI=[-0.1225, 0.4027]
+      [noisy    | eGeMAPSv02     ]  seg=0.0987   sess=0.1512   CI=[-0.1131, 0.3610]
+      [noisy    | wav2vec2-varian]  seg=0.1173*  sess=0.2509*  CI=[0.0589, 0.4026]
+
+  phq_8_total_score:
+    Segment: 0.1421  (sig: 0/4)
+    Session: 0.1267  (sig: 0/4)  delta: -0.0154
+      [denoised | eGeMAPSv02     ]  seg=0.0645   sess=0.0214   CI=[-0.2782, 0.2775]
+      [denoised | wav2vec2-varian]  seg=0.1950   sess=0.1714   CI=[-0.0520, 0.3454]
+      [noisy    | eGeMAPSv02     ]  seg=0.0962   sess=0.1063   CI=[-0.0608, 0.2670]
+      [noisy    | wav2vec2-varian]  seg=0.2128   sess=0.2075   CI=[-0.0105, 0.3614]
+
+  stress_current:
+    Segment: 0.1589  (sig: 2/4)
+    Session: 0.1653  (sig: 2/4)  delta: +0.0064
+      [denoised | eGeMAPSv02     ]  seg=0.1121   sess=0.1070   CI=[-0.0293, 0.3110]
+      [denoised | wav2vec2-varian]  seg=0.1782*  sess=0.1760*  CI=[0.0105, 0.3257]
+      [noisy    | eGeMAPSv02     ]  seg=0.1515   sess=0.1798   CI=[-0.1253, 0.4225]
+      [noisy    | wav2vec2-varian]  seg=0.1939*  sess=0.1986*  CI=[0.0479, 0.3317]
+
+  stress_work_tasks:
+    Segment: 0.2423  (sig: 3/4)
+    Session: 0.2545  (sig: 0/4)  delta: +0.0122
+      [denoised | eGeMAPSv02     ]  seg=0.2375*  sess=0.2622   CI=[-0.0661, 0.4227]
+      [denoised | wav2vec2-varian]  seg=0.2142*  sess=0.2143   CI=[-0.0042, 0.3741]
+      [noisy    | eGeMAPSv02     ]  seg=0.3056   sess=0.3219   CI=[-0.0752, 0.5573]
+      [noisy    | wav2vec2-varian]  seg=0.2120*  sess=0.2198   CI=[-0.0042, 0.3792]
+
+All output files saved to: /data/phecker/project/audiary/projects/prompt-performance/modelling-static/results/mwas/composed/session_level_analysis
+Done.
