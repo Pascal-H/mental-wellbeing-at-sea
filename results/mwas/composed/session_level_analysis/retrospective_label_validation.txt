@@ -1,0 +1,113 @@
+Retrospective Label Validation: Session-Level Analysis
+============================================================
+Generated: 2026-02-24 17:26:19
+
+PURPOSE
+------------------------------------------------------------
+Compare session-level CCC computed on ALL sessions
+(including those with retrospectively assigned weekly labels)
+against CCC computed only on ASSESSMENT-ONLY sessions
+(where a questionnaire was actually completed).
+
+Assessment session types: weekly_01, weekly_02, baseline, final
+Retrospective targets: WHO-5, PSS-10, PHQ-8
+Daily targets (stress_current, stress_work_tasks) are not retrospective and are excluded.
+
+OVERALL SUMMARY
+============================================================
+  Configurations:            12
+  Mean CCC (all sessions):   0.2074
+  Mean CCC (assess-only):    0.2138
+  Mean delta (assess - all): +0.0064
+  Delta range:               [-0.0943, +0.1013]
+  Assessment > All:          7/12
+  Significant (all):         3/12
+  Significant (assess-only): 3/12
+
+TARGET: who_5_percentage_score_corrected
+------------------------------------------------------------
+  Mean CCC (all):    0.3232
+  Mean CCC (assess): 0.3389
+  Mean delta:        +0.0158
+
+TARGET: phq_8_total_score
+------------------------------------------------------------
+  Mean CCC (all):    0.1267
+  Mean CCC (assess): 0.0872
+  Mean delta:        -0.0395
+
+TARGET: pss_10_total_score
+------------------------------------------------------------
+  Mean CCC (all):    0.1723
+  Mean CCC (assess): 0.2152
+  Mean delta:        +0.0429
+
+
+============================================================
+DETAILED PER-CONFIGURATION ANALYSIS
+============================================================
+
+Retrospective configurations: 12 / 20
+
+================================================================================
+who_5_percentage_score_corrected | eGeMAPSv02... | denoised
+  All sessions:       CCC=0.363824  CI=[-0.044603, 0.590668]  N=269
+  Assessment-only:    CCC=0.465085  CI=[0.051695, 0.664412]  N=102 sessions, 25 participants
+  Delta (assess - all): +0.101261
+================================================================================
+who_5_percentage_score_corrected | wav2vec2-variant-wav2vec2-larg... | denoised
+  All sessions:       CCC=0.238113  CI=[-0.015007, 0.452820]  N=104
+  Assessment-only:    CCC=0.296281  CI=[-0.225334, 0.594136]  N=38 sessions, 14 participants
+  Delta (assess - all): +0.058168
+================================================================================
+who_5_percentage_score_corrected | eGeMAPSv02... | noisy
+  All sessions:       CCC=0.350369  CI=[0.019678, 0.515335]  N=290
+  Assessment-only:    CCC=0.320796  CI=[-0.041548, 0.498308]  N=107 sessions, 25 participants
+  Delta (assess - all): -0.029573
+================================================================================
+who_5_percentage_score_corrected | wav2vec2-variant-wav2vec2-larg... | noisy
+  All sessions:       CCC=0.340419  CI=[0.088999, 0.497717]  N=272
+  Assessment-only:    CCC=0.273633  CI=[0.013387, 0.474604]  N=105 sessions, 25 participants
+  Delta (assess - all): -0.066786
+================================================================================
+pss_10_total_score | eGeMAPSv02... | denoised
+  All sessions:       CCC=0.114707  CI=[-0.184313, 0.315105]  N=227
+  Assessment-only:    CCC=0.159616  CI=[-0.200464, 0.462678]  N=81 sessions, 22 participants
+  Delta (assess - all): +0.044909
+================================================================================
+pss_10_total_score | wav2vec2-variant-wav2vec2-larg... | denoised
+  All sessions:       CCC=0.172311  CI=[-0.122455, 0.402716]  N=208
+  Assessment-only:    CCC=0.190348  CI=[-0.112402, 0.449743]  N=83 sessions, 25 participants
+  Delta (assess - all): +0.018036
+================================================================================
+pss_10_total_score | eGeMAPSv02... | noisy
+  All sessions:       CCC=0.151166  CI=[-0.113080, 0.360953]  N=280
+  Assessment-only:    CCC=0.202281  CI=[-0.091641, 0.465730]  N=96 sessions, 25 participants
+  Delta (assess - all): +0.051115
+================================================================================
+pss_10_total_score | wav2vec2-variant-wav2vec2-larg... | noisy
+  All sessions:       CCC=0.250923  CI=[0.058861, 0.402575]  N=280
+  Assessment-only:    CCC=0.308482  CI=[0.078754, 0.470236]  N=96 sessions, 25 participants
+  Delta (assess - all): +0.057559
+================================================================================
+phq_8_total_score | eGeMAPSv02... | denoised
+  All sessions:       CCC=0.021402  CI=[-0.278219, 0.277513]  N=103
+  Assessment-only:    CCC=0.019054  CI=[-0.396869, 0.348962]  N=37 sessions, 13 participants
+  Delta (assess - all): -0.002348
+================================================================================
+phq_8_total_score | wav2vec2-variant-wav2vec2-larg... | denoised
+  All sessions:       CCC=0.171450  CI=[-0.052023, 0.345443]  N=268
+  Assessment-only:    CCC=0.092586  CI=[-0.148813, 0.259816]  N=101 sessions, 24 participants
+  Delta (assess - all): -0.078864
+================================================================================
+phq_8_total_score | eGeMAPSv02... | noisy
+  All sessions:       CCC=0.106344  CI=[-0.060805, 0.267038]  N=289
+  Assessment-only:    CCC=0.123925  CI=[-0.104424, 0.342012]  N=106 sessions, 25 participants
+  Delta (assess - all): +0.017581
+================================================================================
+phq_8_total_score | wav2vec2-variant-wav2vec2-larg... | noisy
+  All sessions:       CCC=0.207540  CI=[-0.010477, 0.361362]  N=289
+  Assessment-only:    CCC=0.113244  CI=[-0.157026, 0.290394]  N=106 sessions, 25 participants
+  Delta (assess - all): -0.094296
+
+Results CSV: /data/phecker/project/audiary/projects/prompt-performance/modelling-static/results/mwas/composed/session_level_analysis/retrospective_label_validation_results.csv
