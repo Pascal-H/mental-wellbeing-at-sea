@@ -184,18 +184,18 @@ def load_database_aisl(path_active):
 def prepare_event_markers(event_timings, freq="D"):
     """
     Prepare a list of event marker dicts for plotting.
-    
+
     Parameters
     ----------
     event_timings : dict
         Dictionary containing event timing information with 'land_and_sea' and 'loading_and_discharge' keys.
     freq : str, optional
         Frequency string for time floor operation (default is "D" for daily).
-        
+
     Returns
     -------
     list
-        List of dictionaries, each containing: {'date': pd.Timestamp, 'color': str, 'label': str, 
+        List of dictionaries, each containing: {'date': pd.Timestamp, 'color': str, 'label': str,
         'linestyle': str, 'alpha': float}. Used for plotting event markers on time series plots.
     """
     markers = []
@@ -273,7 +273,7 @@ def plot_event_markers(
 ):
     """
     Plot vertical lines and labels for events on the given axis.
-    
+
     Parameters
     ----------
     ax : matplotlib.axes.Axes
@@ -414,7 +414,7 @@ def plot_event_markers(
 def normalize_column(series, min_raw, max_raw):
     """
     Normalize a pandas Series to [0, 1] given its raw min and max.
-    
+
     Parameters
     ----------
     series : pandas.Series
@@ -423,7 +423,7 @@ def normalize_column(series, min_raw, max_raw):
         The minimum value of the raw data range.
     max_raw : float
         The maximum value of the raw data range.
-        
+
     Returns
     -------
     pandas.Series
@@ -444,7 +444,7 @@ def plot_active_time_course_boxplots(
 ):
     """
     Create time series box plots for actively collected survey data.
-    
+
     Parameters
     ----------
     df_session : pandas.DataFrame
@@ -538,7 +538,7 @@ def plot_passive_time_course_boxplots(
 ):
     """
     Create time series box plots for passively collected audio data predictions.
-    
+
     Parameters
     ----------
     df : pandas.DataFrame
@@ -640,7 +640,7 @@ def plot_boxplots(
 ):
     """
     Orchestrate the creation of all time series and aggregated box plots.
-    
+
     Parameters
     ----------
     df_passive : pandas.DataFrame
@@ -765,14 +765,14 @@ def plot_boxplots(
 def subtract_intervals(base_intervals, subtract_intervals):
     """
     Subtract a list of intervals from another list of intervals.
-    
+
     Parameters
     ----------
     base_intervals : list
         List of tuples (start, end) representing base time intervals.
     subtract_intervals : list
         List of tuples (start, end) representing intervals to subtract.
-        
+
     Returns
     -------
     list
@@ -1015,14 +1015,14 @@ def plot_aggregated_event_boxplots_active(
 def filter_duration(df, min_duration):
     """
     Filter the DataFrame to only include rows where the 'duration' column is greater than or equal to min_duration.
-    
+
     Parameters
     ----------
     df : pandas.DataFrame
         DataFrame with MultiIndex containing 'start' and 'end' levels for calculating duration.
     min_duration : float
         Minimum duration threshold in seconds.
-        
+
     Returns
     -------
     pandas.DataFrame
@@ -1043,7 +1043,7 @@ def evaluate_time_course(
 ):
     """
     Main function to evaluate and plot time course data for both passive and active data collection.
-    
+
     Parameters
     ----------
     df_passive : pandas.DataFrame
