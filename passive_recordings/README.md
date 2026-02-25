@@ -157,7 +157,7 @@ This repository includes the figures used in the associated scientific publicati
 **Table 5 - Wind Speed Correlation Analysis:**
 - Correlation analysis code: [`src/evaluate_results/evaluate_wind_correlation.ipynb`](src/evaluate_results/evaluate_wind_correlation.ipynb)
 
-**Confounder Analysis -- Wind, SNR, and Denoising:**
+**Confounder Analysis - Wind, SNR, and Denoising:**
 - Structured results: [`data/evaluated/confounder-noise_denoising/confounder_results.yaml`](data/evaluated/confounder-noise_denoising/confounder_results.yaml)
 - Verbose report: [`data/evaluated/confounder-noise_denoising/confounder_results_verbose.txt`](data/evaluated/confounder-noise_denoising/confounder_results_verbose.txt)
 
