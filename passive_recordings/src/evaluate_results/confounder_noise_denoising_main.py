@@ -10,9 +10,9 @@ Saves structured results as YAML and a verbose text report with conditional
 interpretation.
 
 Addresses reviewer comments:
-  Reviewer 1, Point 4 -- Methodological considerations on wind, noise, and
+  Reviewer 1, Point 4 - Methodological considerations on wind, noise, and
       denoising confounding.
-  Reviewer 2, Point 5 -- Confounding factors in passive data analysis.
+  Reviewer 2, Point 5 - Confounding factors in passive data analysis.
 
 References:
   Leem, S.-G., Fulford, D., Onnela, J.-P., Gard, D., & Busso, C. (2023).
@@ -35,7 +35,7 @@ import yaml
 TIME_BLOCK = "3h"
 BRIDGE_MICS = ("M1", "M2", "M3", "M6")
 
-# Paths -- adjust to local setup
+# Paths - adjust to local setup
 DIR_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
 )
@@ -141,7 +141,7 @@ def load_data():
 
 
 # ---------------------------------------------------------------------------
-# Part 1 -- Wind speed vs SNR
+# Part 1 - Wind speed vs SNR
 # ---------------------------------------------------------------------------
 
 
@@ -234,7 +234,7 @@ def analyse_wind_snr(df_snr, df_wind, event_timings):
 
 
 # ---------------------------------------------------------------------------
-# Part 2 -- Denoising effect on emotion predictions
+# Part 2 - Denoising effect on emotion predictions
 # ---------------------------------------------------------------------------
 
 
@@ -336,7 +336,7 @@ def analyse_denoising(df_den, df_noden, event_timings):
 
 
 # ---------------------------------------------------------------------------
-# Part 3 -- Wind / SNR dependent denoising bias
+# Part 3 - Wind / SNR dependent denoising bias
 # ---------------------------------------------------------------------------
 
 

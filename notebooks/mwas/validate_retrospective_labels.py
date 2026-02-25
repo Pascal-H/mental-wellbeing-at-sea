@@ -99,8 +99,9 @@ RETROSPECTIVE_TARGETS = [
 ]
 
 
-def compute_ccc_with_ci(labels, predictions, participant_codes,
-                        num_bootstraps=1000, alpha=5):
+def compute_ccc_with_ci(
+    labels, predictions, participant_codes, num_bootstraps=1000, alpha=5
+):
     """Compute CCC with 95% CI via participant-clustered bootstrap.
 
     Args:
@@ -120,8 +121,11 @@ def compute_ccc_with_ci(labels, predictions, participant_codes,
 
     if n < 2:
         return {
-            "ccc": np.nan, "ci_low": np.nan, "ci_high": np.nan,
-            "significant": False, "n": n,
+            "ccc": np.nan,
+            "ci_low": np.nan,
+            "ci_high": np.nan,
+            "significant": False,
+            "n": n,
         }
 
     tpl = evaluate_with_conf_int(
@@ -186,22 +190,17 @@ def resolve_survey_type(df_pred, df_meta):
     """
     df_pred = df_pred.copy()
     meta_lookup = (
-        df_meta.groupby(["participant_code", "session"])["survey"]
-        .first()
-        .to_dict()
+        df_meta.groupby(["participant_code", "session"])["survey"].first().to_dict()
     )
     df_pred["survey_type"] = df_pred.apply(
-        lambda r: meta_lookup.get(
-            (r["participant_code"], r["session"]), "unknown"
-        ),
+        lambda r: meta_lookup.get((r["participant_code"], r["session"]), "unknown"),
         axis=1,
     )
     if (df_pred["survey_type"] == "unknown").sum() > len(df_pred) * 0.5:
         for cast_fn in [str, int, float]:
             try:
                 meta_coerced = {
-                    (pc, cast_fn(s)): sv
-                    for (pc, s), sv in meta_lookup.items()
+                    (pc, cast_fn(s)): sv for (pc, s), sv in meta_lookup.items()
                 }
                 df_pred["survey_type"] = df_pred.apply(
                     lambda r: meta_coerced.get(
@@ -210,9 +209,7 @@ def resolve_survey_type(df_pred, df_meta):
                     ),
                     axis=1,
                 )
-                if (
-                    df_pred["survey_type"] == "unknown"
-                ).sum() < len(df_pred) * 0.5:
+                if (df_pred["survey_type"] == "unknown").sum() < len(df_pred) * 0.5:
                     break
             except (ValueError, TypeError):
                 continue
@@ -223,11 +220,12 @@ def main():
     # ===== Paths =====
     base_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(base_dir, "..", ".."))
-    path_results_root = os.path.join(
-        project_root, "results", "mwas", "modelling"
-    )
+    path_results_root = os.path.join(project_root, "results", "mwas", "modelling")
     path_paper_csv = os.path.join(
-        project_root, "results", "mwas", "composed",
+        project_root,
+        "results",
+        "mwas",
+        "composed",
         "compiled-merged_denoised_noisy-paper-proper_loso-expanded.csv",
     )
     path_meta_csv = (
@@ -235,7 +233,10 @@ def main():
         "data_mwas_processed-final_data/final_data-df_files.csv"
     )
     output_dir = os.path.join(
-        project_root, "results", "mwas", "composed",
+        project_root,
+        "results",
+        "mwas",
+        "composed",
         "session_level_analysis",
     )
     os.makedirs(output_dir, exist_ok=True)
@@ -245,13 +246,8 @@ def main():
     df_meta = pd.read_csv(path_meta_csv)
 
     # Filter to retrospective targets only
-    df_retro_configs = df_paper[
-        df_paper["Target"].isin(RETROSPECTIVE_TARGETS)
-    ]
-    log(
-        f"Retrospective configurations: "
-        f"{len(df_retro_configs)} / {len(df_paper)}"
-    )
+    df_retro_configs = df_paper[df_paper["Target"].isin(RETROSPECTIVE_TARGETS)]
+    log(f"Retrospective configurations: " f"{len(df_retro_configs)} / {len(df_paper)}")
     log()
 
     # ===== Process each retrospective configuration =====
@@ -262,9 +258,7 @@ def main():
         features = row["Features"]
         task = row["Task"]
         survey_label = row["Survey"]
-        audio_quality = (
-            "noisy" if "noisy" in survey_label.lower() else "denoised"
-        )
+        audio_quality = "noisy" if "noisy" in survey_label.lower() else "denoised"
 
         # Load predictions and resolve survey types
         data_path = row["path"].replace(
@@ -280,9 +274,7 @@ def main():
         df_pred = resolve_survey_type(df_pred, df_meta)
 
         log(f"{'=' * 80}")
-        log(
-            f"{target} | {features[:30]}... | {audio_quality}"
-        )
+        log(f"{target} | {features[:30]}... | {audio_quality}")
 
         # ---- Session-level CCC on ALL sessions ----
         df_sess_all = aggregate_to_sessions(df_pred, target)
@@ -299,21 +291,20 @@ def main():
         )
 
         # ---- Session-level CCC on ASSESSMENT-ONLY sessions ----
-        df_assess = df_pred[
-            df_pred["survey_type"].isin(ASSESSMENT_SURVEY_TYPES)
-        ]
+        df_assess = df_pred[df_pred["survey_type"].isin(ASSESSMENT_SURVEY_TYPES)]
         m_assess = {
-            "ccc": np.nan, "ci_low": np.nan, "ci_high": np.nan,
-            "significant": False, "n": 0,
+            "ccc": np.nan,
+            "ci_low": np.nan,
+            "ci_high": np.nan,
+            "significant": False,
+            "n": 0,
         }
         n_assess_sessions = 0
 
         if len(df_assess) > 0:
             df_sess_assess = aggregate_to_sessions(df_assess, target)
             n_assess_sessions = len(df_sess_assess)
-            n_assess_participants = (
-                df_sess_assess["participant_code"].nunique()
-            )
+            n_assess_participants = df_sess_assess["participant_code"].nunique()
             if n_assess_sessions >= 2:
                 m_assess = compute_ccc_with_ci(
                     df_sess_assess["target_value"].values,
@@ -332,8 +323,7 @@ def main():
             log("  Assessment-only:    No assessment sessions found")
 
         delta = (
-            m_assess["ccc"] - m_all["ccc"]
-            if not np.isnan(m_assess["ccc"]) else np.nan
+            m_assess["ccc"] - m_all["ccc"] if not np.isnan(m_assess["ccc"]) else np.nan
         )
         if not np.isnan(delta):
             log(f"  Delta (assess - all): {delta:+.6f}")
@@ -364,9 +354,7 @@ def main():
 
     # ===== Save results CSV =====
     df_results = pd.DataFrame(all_results)
-    csv_path = os.path.join(
-        output_dir, "retrospective_label_validation_results.csv"
-    )
+    csv_path = os.path.join(output_dir, "retrospective_label_validation_results.csv")
     df_results.to_csv(csv_path, index=False)
     log(f"\nResults CSV: {csv_path}")
 
@@ -382,36 +370,23 @@ def main():
     n_assess_sig = df_results["ccc_session_assess_significant"].sum()
 
     summary_lines = []
-    summary_lines.append(
-        "Retrospective Label Validation: Session-Level Analysis"
-    )
+    summary_lines.append("Retrospective Label Validation: Session-Level Analysis")
     summary_lines.append("=" * 60)
-    summary_lines.append(
-        f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+    summary_lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     summary_lines.append("")
     summary_lines.append("PURPOSE")
     summary_lines.append("-" * 60)
-    summary_lines.append(
-        "Compare session-level CCC computed on ALL sessions"
-    )
+    summary_lines.append("Compare session-level CCC computed on ALL sessions")
     summary_lines.append(
         "(including those with retrospectively assigned weekly labels)"
     )
-    summary_lines.append(
-        "against CCC computed only on ASSESSMENT-ONLY sessions"
-    )
-    summary_lines.append(
-        "(where a questionnaire was actually completed)."
-    )
+    summary_lines.append("against CCC computed only on ASSESSMENT-ONLY sessions")
+    summary_lines.append("(where a questionnaire was actually completed).")
     summary_lines.append("")
     summary_lines.append(
-        "Assessment session types: weekly_01, weekly_02, "
-        "baseline, final"
+        "Assessment session types: weekly_01, weekly_02, " "baseline, final"
     )
-    summary_lines.append(
-        "Retrospective targets: WHO-5, PSS-10, PHQ-8"
-    )
+    summary_lines.append("Retrospective targets: WHO-5, PSS-10, PHQ-8")
     summary_lines.append(
         "Daily targets (stress_current, stress_work_tasks) are "
         "not retrospective and are excluded."
@@ -420,32 +395,17 @@ def main():
 
     summary_lines.append("OVERALL SUMMARY")
     summary_lines.append("=" * 60)
+    summary_lines.append(f"  Configurations:            {len(df_results)}")
+    summary_lines.append(f"  Mean CCC (all sessions):   {mean_all:.4f}")
+    summary_lines.append(f"  Mean CCC (assess-only):    {mean_assess:.4f}")
+    summary_lines.append(f"  Mean delta (assess - all): {delta_mean:+.4f}")
     summary_lines.append(
-        f"  Configurations:            {len(df_results)}"
+        f"  Delta range:               " f"[{delta_min:+.4f}, {delta_max:+.4f}]"
     )
+    summary_lines.append(f"  Assessment > All:          " f"{n_higher}/{len(deltas)}")
+    summary_lines.append(f"  Significant (all):         {n_all_sig}/{len(df_results)}")
     summary_lines.append(
-        f"  Mean CCC (all sessions):   {mean_all:.4f}"
-    )
-    summary_lines.append(
-        f"  Mean CCC (assess-only):    {mean_assess:.4f}"
-    )
-    summary_lines.append(
-        f"  Mean delta (assess - all): {delta_mean:+.4f}"
-    )
-    summary_lines.append(
-        f"  Delta range:               "
-        f"[{delta_min:+.4f}, {delta_max:+.4f}]"
-    )
-    summary_lines.append(
-        f"  Assessment > All:          "
-        f"{n_higher}/{len(deltas)}"
-    )
-    summary_lines.append(
-        f"  Significant (all):         {n_all_sig}/{len(df_results)}"
-    )
-    summary_lines.append(
-        f"  Significant (assess-only): "
-        f"{n_assess_sig}/{len(df_results)}"
+        f"  Significant (assess-only): " f"{n_assess_sig}/{len(df_results)}"
     )
     summary_lines.append("")
 
@@ -458,23 +418,18 @@ def main():
         summary_lines.append(f"TARGET: {tgt}")
         summary_lines.append("-" * 60)
         summary_lines.append(
-            f"  Mean CCC (all):    "
-            f"{df_t['ccc_session_all'].mean():.4f}"
+            f"  Mean CCC (all):    " f"{df_t['ccc_session_all'].mean():.4f}"
         )
         summary_lines.append(
-            f"  Mean CCC (assess): "
-            f"{df_t['ccc_session_assess'].mean():.4f}"
+            f"  Mean CCC (assess): " f"{df_t['ccc_session_assess'].mean():.4f}"
         )
         summary_lines.append(
-            f"  Mean delta:        "
-            f"{df_t['delta_assess_minus_all'].mean():+.4f}"
+            f"  Mean delta:        " f"{df_t['delta_assess_minus_all'].mean():+.4f}"
         )
         summary_lines.append("")
 
     # ===== Write text file: summary first, then detailed analysis =====
-    txt_path = os.path.join(
-        output_dir, "retrospective_label_validation.txt"
-    )
+    txt_path = os.path.join(output_dir, "retrospective_label_validation.txt")
     with open(txt_path, "w") as f:
         f.write("\n".join(summary_lines))
         f.write("\n\n")
@@ -491,14 +446,8 @@ def main():
     log(f"  Mean CCC (all sessions):    {mean_all:.4f}")
     log(f"  Mean CCC (assessment-only): {mean_assess:.4f}")
     log(f"  Mean delta:                 {delta_mean:+.4f}")
-    log(
-        f"  Range:                      "
-        f"[{delta_min:+.4f}, {delta_max:+.4f}]"
-    )
-    log(
-        f"  Assessment > All:           "
-        f"{n_higher}/{len(deltas)}"
-    )
+    log(f"  Range:                      " f"[{delta_min:+.4f}, {delta_max:+.4f}]")
+    log(f"  Assessment > All:           " f"{n_higher}/{len(deltas)}")
     log("\nDone.")
 
 

@@ -76,8 +76,9 @@ def log(msg=""):
     _output_lines.append(msg)
 
 
-def compute_ccc_with_ci(labels, predictions, participant_codes,
-                        num_bootstraps=1000, alpha=5):
+def compute_ccc_with_ci(
+    labels, predictions, participant_codes, num_bootstraps=1000, alpha=5
+):
     """Compute CCC with 95% CI via participant-clustered bootstrap.
 
     Args:
@@ -97,8 +98,11 @@ def compute_ccc_with_ci(labels, predictions, participant_codes,
 
     if n < 2:
         return {
-            "ccc": np.nan, "ci_low": np.nan, "ci_high": np.nan,
-            "significant": False, "n": n,
+            "ccc": np.nan,
+            "ci_low": np.nan,
+            "ci_high": np.nan,
+            "significant": False,
+            "n": n,
         }
 
     tpl = evaluate_with_conf_int(
@@ -149,15 +153,19 @@ def main():
     # ===== Paths =====
     base_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(base_dir, "..", ".."))
-    path_results_root = os.path.join(
-        project_root, "results", "mwas", "modelling"
-    )
+    path_results_root = os.path.join(project_root, "results", "mwas", "modelling")
     path_paper_csv = os.path.join(
-        project_root, "results", "mwas", "composed",
+        project_root,
+        "results",
+        "mwas",
+        "composed",
         "compiled-merged_denoised_noisy-paper-proper_loso-expanded.csv",
     )
     output_dir = os.path.join(
-        project_root, "results", "mwas", "composed",
+        project_root,
+        "results",
+        "mwas",
+        "composed",
         "session_level_analysis",
     )
     os.makedirs(output_dir, exist_ok=True)
@@ -183,9 +191,7 @@ def main():
         features = row["Features"]
         task = row["Task"]
         survey_label = row["Survey"]
-        audio_quality = (
-            "noisy" if "noisy" in survey_label.lower() else "denoised"
-        )
+        audio_quality = "noisy" if "noisy" in survey_label.lower() else "denoised"
 
         # Load segment-level predictions
         data_path = row["path"].replace(
@@ -234,9 +240,7 @@ def main():
 
         # Validate against existing concordance_cc-test-agg-average
         sess_match = True
-        if has_agg_avg and not pd.isna(
-            row["concordance_cc-test-agg-average"]
-        ):
+        if has_agg_avg and not pd.isna(row["concordance_cc-test-agg-average"]):
             existing_agg = row["concordance_cc-test-agg-average"]
             sess_match = abs(m_sess["ccc"] - existing_agg) < 1e-6
             log(
@@ -278,8 +282,7 @@ def main():
             "ccc_session_significant": m_sess["significant"],
             "n_sessions": m_sess["n"],
             "existing_agg_average": (
-                row["concordance_cc-test-agg-average"]
-                if has_agg_avg else np.nan
+                row["concordance_cc-test-agg-average"] if has_agg_avg else np.nan
             ),
             "session_matches_existing": sess_match,
             "delta_session_segment": delta,
@@ -296,27 +299,27 @@ def main():
     # Format: ccc_conf_mean = session-level CCC (with bootstrap CIs)
     pub_data = []
     for _, r in df_results.iterrows():
-        pub_data.append({
-            "ccc_conf_mean": r["ccc_session"],
-            "ccc_conf_low": r["ccc_session_ci_low"],
-            "ccc_conf_high": r["ccc_session_ci_high"],
-            "lower_bound_larger_null": r["ccc_session_significant"],
-            "task": r["task"],
-            "Features": r["features"],
-            "ccc_segment_mean": r["ccc_segment"],
-            "ccc_segment_low": r["ccc_segment_ci_low"],
-            "ccc_segment_high": r["ccc_segment_ci_high"],
-            "concordance_cc-test-agg-average": r["ccc_session"],
-            "path": r["path"],
-            "Target": r["target"],
-            "Task": r["task"],
-            "Survey": r["survey_label"],
-        })
+        pub_data.append(
+            {
+                "ccc_conf_mean": r["ccc_session"],
+                "ccc_conf_low": r["ccc_session_ci_low"],
+                "ccc_conf_high": r["ccc_session_ci_high"],
+                "lower_bound_larger_null": r["ccc_session_significant"],
+                "task": r["task"],
+                "Features": r["features"],
+                "ccc_segment_mean": r["ccc_segment"],
+                "ccc_segment_low": r["ccc_segment_ci_low"],
+                "ccc_segment_high": r["ccc_segment_ci_high"],
+                "concordance_cc-test-agg-average": r["ccc_session"],
+                "path": r["path"],
+                "Target": r["target"],
+                "Task": r["task"],
+                "Survey": r["survey_label"],
+            }
+        )
 
     df_pub = pd.DataFrame(pub_data)
-    pub_csv = os.path.join(
-        output_dir, "compiled-session_level-paper_configs.csv"
-    )
+    pub_csv = os.path.join(output_dir, "compiled-session_level-paper_configs.csv")
     df_pub.to_csv(pub_csv, index=False)
     log(f"Publication CSV: {pub_csv}")
 
@@ -326,10 +329,7 @@ def main():
     log(f"{'=' * 80}")
 
     n_seg_match = df_results["segment_matches_paper"].sum()
-    log(
-        f"  Segment CCC vs paper: "
-        f"{n_seg_match}/{len(df_results)} match"
-    )
+    log(f"  Segment CCC vs paper: " f"{n_seg_match}/{len(df_results)} match")
     if has_agg_avg:
         n_sess_match = df_results["session_matches_existing"].sum()
         log(
@@ -365,10 +365,7 @@ def main():
         f"mean={delta_col.mean():+.4f}  "
         f"(range: {delta_col.min():+.4f} to {delta_col.max():+.4f})"
     )
-    log(
-        f"    Session > Segment: "
-        f"{(delta_col > 0).sum()}/{n_total} configs"
-    )
+    log(f"    Session > Segment: " f"{(delta_col > 0).sum()}/{n_total} configs")
 
     log(f"\n--- Per target ---")
     for tgt in df_results["target"].unique():

@@ -49,6 +49,7 @@ import pandas as pd
 import audbenchmark
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -62,38 +63,44 @@ def configure_plot_style():
     """Set Springer Nature CS compliant rcParams."""
     sns.set_context("paper")
     sns.set_style("ticks")
-    plt.rcParams.update({
-        "font.family": "sans-serif",
-        "font.sans-serif": [
-            "DejaVu Sans", "Helvetica", "Arial", "sans-serif",
-        ],
-        "font.size": 8,
-        "axes.labelsize": 9,
-        "axes.titlesize": 10,
-        "xtick.labelsize": 8,
-        "ytick.labelsize": 8,
-        "pdf.fonttype": 42,   # TrueType - ensures fonts are embedded
-        "ps.fonttype": 42,
-        "svg.fonttype": "none",  # text as text in SVG
-        "figure.dpi": 300,
-        "savefig.dpi": 300,
-        "axes.linewidth": 0.5,
-        "xtick.major.width": 0.5,
-        "ytick.major.width": 0.5,
-        "xtick.major.size": 3,
-        "ytick.major.size": 3,
-    })
+    plt.rcParams.update(
+        {
+            "font.family": "sans-serif",
+            "font.sans-serif": [
+                "DejaVu Sans",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+            ],
+            "font.size": 8,
+            "axes.labelsize": 9,
+            "axes.titlesize": 10,
+            "xtick.labelsize": 8,
+            "ytick.labelsize": 8,
+            "pdf.fonttype": 42,  # TrueType - ensures fonts are embedded
+            "ps.fonttype": 42,
+            "svg.fonttype": "none",  # text as text in SVG
+            "figure.dpi": 300,
+            "savefig.dpi": 300,
+            "axes.linewidth": 0.5,
+            "xtick.major.width": 0.5,
+            "ytick.major.width": 0.5,
+            "xtick.major.size": 3,
+            "ytick.major.size": 3,
+        }
+    )
 
 
 def main():
     # ===== Paths =====
     base_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(base_dir, "..", ".."))
-    path_results_root = os.path.join(
-        project_root, "results", "mwas", "modelling"
-    )
+    path_results_root = os.path.join(project_root, "results", "mwas", "modelling")
     path_paper_csv = os.path.join(
-        project_root, "results", "mwas", "composed",
+        project_root,
+        "results",
+        "mwas",
+        "composed",
         "compiled-merged_denoised_noisy-paper-proper_loso-expanded.csv",
     )
     output_dir = os.path.join(base_dir, "figures")
@@ -148,10 +155,7 @@ def main():
     )
     n_sessions = len(df_sess)
     n_participants = df_sess["participant_code"].nunique()
-    print(
-        f"Aggregated to {n_sessions} sessions "
-        f"({n_participants} participants)"
-    )
+    print(f"Aggregated to {n_sessions} sessions " f"({n_participants} participants)")
 
     # ===== Verify CCC =====
     ccc_val = ccc_metric(
@@ -164,8 +168,7 @@ def main():
     expected_ccc = 0.350369
     if abs(ccc_val - expected_ccc) > 1e-4:
         print(
-            f"WARNING: CCC {ccc_val:.6f} differs from expected "
-            f"{expected_ccc:.6f}"
+            f"WARNING: CCC {ccc_val:.6f} differs from expected " f"{expected_ccc:.6f}"
         )
     else:
         print(f"CCC matches expected value ({expected_ccc:.6f})")
@@ -206,8 +209,7 @@ def main():
 
     # ===== Save in three formats =====
     basename = (
-        "regression_who_5_percentage_score_corrected"
-        "_noisy_eGeMAPSv02-publication"
+        "regression_who_5_percentage_score_corrected" "_noisy_eGeMAPSv02-publication"
     )
 
     for cur_ext in ["svg", "png", "pdf"]:
@@ -219,9 +221,7 @@ def main():
         if cur_ext == "pdf":
             with open(cur_plot_path, "rb") as f:
                 pdf_bytes = f.read()
-            has_truetype = (
-                b"/Type1" not in pdf_bytes or b"TrueType" in pdf_bytes
-            )
+            has_truetype = b"/Type1" not in pdf_bytes or b"TrueType" in pdf_bytes
             print(
                 f"Font embedding: "
                 f"{'OK (TrueType)' if has_truetype else 'WARNING: may contain Type1'}"

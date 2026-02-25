@@ -725,7 +725,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
     for key, value in config.items():
         lines.append(f"  {key}: {value}")
 
-    # -- Confounder distributions
+    # - Confounder distributions
     lines.append("\n" + "=" * 80)
     lines.append("CONFOUNDER DISTRIBUTIONS")
     lines.append("=" * 80)
@@ -737,7 +737,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
         else:
             lines.append(f"  {value}")
 
-    # -- Correlations
+    # - Correlations
     lines.append("\n" + "=" * 80)
     lines.append("BIVARIATE CORRELATIONS")
     lines.append("=" * 80)
@@ -746,7 +746,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
             f"  {corr['label']}: r={corr['r']:.4f}, " f"p={corr['p']:.4f} {corr['sig']}"
         )
 
-    # -- Primary analysis
+    # - Primary analysis
     lines.append("\n" + "=" * 80)
     lines.append("PRIMARY ANALYSIS: Wind -> Emotion Intensity -> Stress (Current)")
     lines.append("=" * 80)
@@ -828,7 +828,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
             " direct effect (c') is, which is consistent with suppression."
         )
 
-    # -- Dimension analysis
+    # - Dimension analysis
     lines.append("\n" + "=" * 80)
     lines.append("EMOTION DIMENSION ANALYSIS")
     lines.append("=" * 80)
@@ -856,7 +856,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
     if nonsig_dims:
         lines.append(f"  Non-significant mediators: {', '.join(nonsig_dims)}")
 
-    # -- Outcome analysis
+    # - Outcome analysis
     lines.append("\n" + "=" * 80)
     lines.append("ALTERNATIVE OUTCOME ANALYSIS")
     lines.append("=" * 80)
@@ -896,7 +896,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
                 " to momentary or recent-task stress."
             )
 
-    # -- OLS comparison
+    # - OLS comparison
     if results.get("ols_comparison"):
         lines.append("\n" + "=" * 80)
         lines.append("OLS vs MIXED-EFFECTS COMPARISON")
@@ -933,7 +933,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
                 " -> Clustering adjustment matters for inference."
             )
 
-    # -- Sensitivity analysis
+    # - Sensitivity analysis
     if results.get("sensitivity") is not None:
         lines.append("\n" + "=" * 80)
         lines.append("SENSITIVITY ANALYSIS FOR UNMEASURED CONFOUNDING")
@@ -987,7 +987,7 @@ def save_verbose_report(results, output_dir, config, correlations, confounder_di
                     f" beyond that threshold."
                 )
 
-    # -- Confounder-adjusted analysis
+    # - Confounder-adjusted analysis
     if results.get("confounder_adjusted"):
         lines.append("\n" + "=" * 80)
         lines.append("CONFOUNDER-ADJUSTED ANALYSIS")
