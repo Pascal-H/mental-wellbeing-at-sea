@@ -189,30 +189,43 @@ def resolve_survey_type(df_pred, df_meta):
         Copy of df_pred with an added ``survey_type`` column.
     """
     df_pred = df_pred.copy()
-    meta_lookup = (
-        df_meta.groupby(["participant_code", "session"])["survey"].first().to_dict()
+    # Base lookup: MultiIndex Series keyed by (participant_code, session)
+    meta_lookup = df_meta.groupby(["participant_code", "session"])["survey"].first()
+    # Vectorized initial match without type coercion
+    idx = pd.MultiIndex.from_arrays(
+        [df_pred["participant_code"], df_pred["session"]],
+        names=["participant_code", "session"],
     )
-    df_pred["survey_type"] = df_pred.apply(
-        lambda r: meta_lookup.get((r["participant_code"], r["session"]), "unknown"),
-        axis=1,
-    )
+    mapped = meta_lookup.reindex(idx)
+    df_pred["survey_type"] = mapped.values
+    df_pred["survey_type"] = df_pred["survey_type"].fillna("unknown")
+    # If more than half of the rows are still unknown, try coercing session types
     if (df_pred["survey_type"] == "unknown").sum() > len(df_pred) * 0.5:
         for cast_fn in [str, int, float]:
             try:
-                meta_coerced = {
+                # Build a coerced lookup keyed by (participant_code, cast_fn(session))
+                coerced_dict = {
                     (pc, cast_fn(s)): sv for (pc, s), sv in meta_lookup.items()
                 }
-                df_pred["survey_type"] = df_pred.apply(
-                    lambda r: meta_coerced.get(
-                        (r["participant_code"], cast_fn(r["session"])),
-                        "unknown",
-                    ),
-                    axis=1,
+                meta_coerced = pd.Series(coerced_dict)
+                meta_coerced.index = pd.MultiIndex.from_tuples(
+                    meta_coerced.index, names=["participant_code", "session"]
                 )
+                # Coerce df_pred["session"] with the same cast_fn
+                coerced_session = df_pred["session"].map(cast_fn)
+                idx_coerced = pd.MultiIndex.from_arrays(
+                    [df_pred["participant_code"], coerced_session],
+                    names=["participant_code", "session"],
+                )
+                mapped_coerced = meta_coerced.reindex(idx_coerced)
+                df_pred["survey_type"] = mapped_coerced.values
+                df_pred["survey_type"] = df_pred["survey_type"].fillna("unknown")
                 if (df_pred["survey_type"] == "unknown").sum() < len(df_pred) * 0.5:
                     break
             except (ValueError, TypeError):
+                # If casting fails for any value, skip this cast_fn entirely
                 continue
+
     return df_pred
 
 

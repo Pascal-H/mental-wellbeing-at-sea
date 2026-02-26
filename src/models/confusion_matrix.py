@@ -20,6 +20,7 @@ def make_confusion_matrix(
 ):
     """
     This function will make a pretty plot of an sklearn Confusion Matrix cm using a Seaborn heatmap visualization.
+    Based on https://github.com/DTrimarchi10/confusion_matrix/blob/master/cf_matrix.py
 
     Arguments
     ---------
@@ -31,7 +32,7 @@ def make_confusion_matrix(
 
     count:         If True, show the raw number in the confusion matrix. Default is True.
 
-    normalize:     If True, show the proportions for each category. Default is True.
+    percent:     If True, show the proportions for each category. Default is True.
 
     cbar:          If True, show the color bar. The cbar values are based off the values in the confusion matrix.
                    Default is True.
@@ -97,11 +98,11 @@ def make_confusion_matrix(
         stats_text = ""
 
     # SET FIGURE PARAMETERS ACCORDING TO OTHER ARGUMENTS
-    if figsize == None:
+    if figsize is None:
         # Get default figure size if not set
         figsize = plt.rcParams.get("figure.figsize")
 
-    if xyticks == False:
+    if xyticks is False:
         # Do not show categories if xyticks is False
         categories = False
 
