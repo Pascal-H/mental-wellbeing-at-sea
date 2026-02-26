@@ -52,6 +52,19 @@ Generates plots and analyses for publication, including SNR (signal-to-noise rat
 - `evaluate_wind.ipynb`: Wind speed calculation from VDR logs
 - `evaluate_wind_correlation.ipynb`: Correlation analysis between wind and emotion predictions
 
+### 4. Confounder Analysis: Noise and Denoising ([`src/evaluate_results/`](src/evaluate_results/))
+
+Evaluates potential confounders in the passive emotion analysis pipeline: (1) whether wind speed degrades audio quality (SNR), (2) whether denoising systematically shifts emotion predictions, and (3) whether the denoising effect depends on wind speed or SNR.
+
+- `confounder_noise_denoising_main.py`: Main analysis script (produces YAML and verbose text report)
+
+### 5. Mediation Analysis ([`src/evaluate_results/`](src/evaluate_results/))
+
+Implements a multilevel mediation model examining how environmental conditions (wind speed) affect crew stress through passively sensed bridge emotion intensity, following the Hayes (2018) mediation framework.
+
+- `mediation_analysis_main.py`: Main mediation analysis script (produces YAML and verbose text report)
+- `mediation_diagram.py`: Generates the publication-quality causal path diagram (PGF/LaTeX)
+
 ## Requirements
 
 - Python 3.9.2
@@ -83,6 +96,28 @@ pip install -r requirements.txt
 4. **Wind analysis (Jupyter notebooks):**
    - Open `src/evaluate_results/evaluate_wind.ipynb` for wind speed calculations
    - Open `src/evaluate_results/evaluate_wind_correlation.ipynb` for correlation analysis
+
+5. **Confounder analysis (noise, denoising, wind):**
+   ```bash
+   python src/evaluate_results/confounder_noise_denoising_main.py
+   ```
+   Results are saved to `data/evaluated/confounder-noise_denoising/`:
+   - `confounder_results.yaml`: Structured results
+   - `confounder_results_verbose.txt`: Human-readable report with conditional interpretation
+
+6. **Mediation analysis (wind -> emotion -> stress):**
+   ```bash
+   python src/evaluate_results/mediation_analysis_main.py
+   ```
+   Results are saved to `data/evaluated/mediation-wind_emotion_stress/`:
+   - `mediation_results.yaml`: Structured results for downstream plotting
+   - `mediation_results_verbose.txt`: Human-readable report with interpretation
+
+7. **Generate mediation path diagram:**
+   ```bash
+   python src/evaluate_results/mediation_diagram.py
+   ```
+   Produces `data/evaluated/mediation-wind_emotion_stress/causal_diagram_pgf.pdf` (requires `pdflatex`).
 
 ## Configuration
 
@@ -121,6 +156,15 @@ This repository includes the figures used in the associated scientific publicati
 
 **Table 5 - Wind Speed Correlation Analysis:**
 - Correlation analysis code: [`src/evaluate_results/evaluate_wind_correlation.ipynb`](src/evaluate_results/evaluate_wind_correlation.ipynb)
+
+**Confounder Analysis - Wind, SNR, and Denoising:**
+- Structured results: [`data/evaluated/confounder-noise_denoising/confounder_results.yaml`](data/evaluated/confounder-noise_denoising/confounder_results.yaml)
+- Verbose report: [`data/evaluated/confounder-noise_denoising/confounder_results_verbose.txt`](data/evaluated/confounder-noise_denoising/confounder_results_verbose.txt)
+
+**Figure 10 - Mediation Path Diagram:**
+- Causal diagram (wind -> emotion -> stress): [`data/evaluated/mediation-wind_emotion_stress/causal_diagram_pgf.pdf`](data/evaluated/mediation-wind_emotion_stress/causal_diagram_pgf.pdf)
+- Structured results: [`data/evaluated/mediation-wind_emotion_stress/mediation_results.yaml`](data/evaluated/mediation-wind_emotion_stress/mediation_results.yaml)
+- Verbose report: [`data/evaluated/mediation-wind_emotion_stress/mediation_results_verbose.txt`](data/evaluated/mediation-wind_emotion_stress/mediation_results_verbose.txt)
 
 ## Citation
 

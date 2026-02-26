@@ -1,0 +1,133 @@
+metadata:
+  generated_at: '2026-02-19T15:54:31.419724'
+  script: confounder_noise_denoising_main.py
+  description: 'Confounder analysis: wind-SNR relationship, denoising effect on emotion
+    predictions, and wind/SNR-dependent denoising bias'
+  time_block: 3h
+wind_snr:
+  overall_r: -0.3149775801500089
+  overall_p: 3.6703685554613234e-07
+  overall_r_squared: 0.09921087599715527
+  n_blocks: 250
+  wind_mean_avg: 12.65460378885948
+  wind_mean_sd: 6.356977260757104
+  snr_mean_avg: 6.7739691734313965
+  snr_mean_sd: 0.8164910078048706
+  stratified:
+    sea:
+      r: -0.39617685434721434
+      p: 1.1564572020013138e-06
+      n: 141
+      r_squared: 0.1569560999204539
+    port:
+      r: 0.10165867785841154
+      p: 0.3431563444173576
+      n: 89
+      r_squared: 0.010334486783920292
+    operations:
+      r: 0.6763333239430865
+      p: 0.001475689913776816
+      n: 19
+      r_squared: 0.457426765075904
+denoising_effect:
+  arousal:
+    den_mean: 0.3906877934932709
+    den_sd: 0.026402689516544342
+    noden_mean: 0.35962435603141785
+    noden_sd: 0.06459977477788925
+    diff_mean: 0.03106340952217579
+    diff_sd: 0.06119793653488159
+    t_stat: 8.850119339825861
+    p_ttest: 7.440533673765879e-17
+    cohens_d: 0.5075891652730852
+    correlation_r: 0.33341940267662856
+    correlation_p: 2.509362431654991e-09
+  dominance:
+    den_mean: 0.39857396483421326
+    den_sd: 0.021909333765506744
+    noden_mean: 0.37953850626945496
+    noden_sd: 0.04382634907960892
+    diff_mean: 0.019035492092370987
+    diff_sd: 0.0426248200237751
+    t_stat: 7.786428790200703
+    p_ttest: 1.101266215967904e-13
+    cohens_d: 0.44658234525690543
+    correlation_r: 0.3071574632598868
+    correlation_p: 4.6001313165662e-08
+  valence:
+    den_mean: 0.423868328332901
+    den_sd: 0.015613044612109661
+    noden_mean: 0.4616613984107971
+    noden_sd: 0.10606978088617325
+    diff_mean: -0.03779309615492821
+    diff_sd: 0.10294689238071442
+    t_stat: -6.400825837950911
+    p_ttest: 5.868224036332357e-10
+    cohens_d: -0.3671125497908491
+    correlation_r: 0.28119700053616703
+    correlation_p: 6.242648635528379e-07
+  intensity:
+    den_mean: 0.39463087916374207
+    den_sd: 0.02372029423713684
+    noden_mean: 0.3695814311504364
+    noden_sd: 0.05327978357672691
+    diff_mean: 0.025049451738595963
+    diff_sd: 0.05079745128750801
+    t_stat: 8.597912866929843
+    p_ttest: 4.41602260074163e-16
+    cohens_d: 0.4931241844560037
+    correlation_r: 0.32817165143552895
+    correlation_p: 4.589257131220466e-09
+denoising_bias:
+  n_blocks: 250
+  wind_vs_diff:
+    intensity:
+      r: 0.15901142298280432
+      p: 0.011814733601895989
+      r_squared: 0.02528463263901631
+      n: 250
+    arousal:
+      r: 0.22043221505624877
+      p: 0.0004461561128658671
+      r_squared: 0.04859036143460431
+      n: 250
+    dominance:
+      r: 0.06702839650960338
+      p: 0.2911105921517928
+      r_squared: 0.00449280593864861
+      n: 250
+    valence:
+      r: 0.08056354897758762
+      p: 0.20426198228225584
+      r_squared: 0.00649048542386416
+      n: 250
+  snr_vs_diff:
+    intensity:
+      r: -0.16767784180695136
+      p: 0.007889350274737361
+      r_squared: 0.028115858633037005
+      n: 250
+    arousal:
+      r: -0.2239500448322168
+      p: 0.0003588273541257662
+      r_squared: 0.05015362258035192
+      n: 250
+    dominance:
+      r: -0.08222134860913499
+      p: 0.19507423268324173
+      r_squared: 0.006760350167104905
+      n: 250
+    valence:
+      r: -0.23982591639826673
+      p: 0.00012866147571130915
+      r_squared: 0.057516470176268424
+      n: 250
+  stratified_intensity_wind:
+    sea:
+      r: 0.13881133109818827
+      p: 0.1006774731913376
+      n: 141
+    port:
+      r: 0.09224316359644544
+      p: 0.3899250075523153
+      n: 89
