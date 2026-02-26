@@ -141,7 +141,7 @@ def compute_ccc_with_ci(
         "ccc": tpl[0],
         "ci_low": tpl[1][0],
         "ci_high": tpl[1][1],
-        # "Singificant" in this context means if the lower confidence interval is > 0
+        # "Significant" in this context means that the lower confidence interval is > 0
         "significant": tpl[1][0] > 0,
         "n": n,
     }
