@@ -36,11 +36,23 @@ TIME_BLOCK = "3h"
 BRIDGE_MICS = ("M1", "M2", "M3", "M6")
 
 # Paths - adjust to local setup
-DIR_ROOT = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
+# Original paths (require original data, not publicly available):
+# DIR_ROOT = os.path.abspath(
+#     os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
+# )
+# DIR_EVALUATED = os.path.join(DIR_ROOT, "data", "evaluated")
+# DIR_OUT = os.path.join(DIR_EVALUATED, "confounder-noise_denoising")
+# PATH_EVENTS_YAML = os.path.join(
+#     DIR_ROOT, "src", "evaluate_results", "evaluate_time_course_events.yaml"
+# )
+
+# Synthetic data paths (for pipeline verification without original data)
+_REPO_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir)
 )
+DIR_ROOT = os.path.join(_REPO_ROOT, "synthetic_data", "passive")
 DIR_EVALUATED = os.path.join(DIR_ROOT, "data", "evaluated")
-DIR_OUT = os.path.join(DIR_EVALUATED, "confounder-noise_denoising")
+DIR_OUT = os.path.join(DIR_EVALUATED, "synthetic-confounder-noise_denoising")
 PATH_EVENTS_YAML = os.path.join(
     DIR_ROOT, "src", "evaluate_results", "evaluate_time_course_events.yaml"
 )

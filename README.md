@@ -35,6 +35,61 @@ Without a respective devAIce license, you can run `pip install -r requirements-f
 Python version 3.8.10 was used in this project.
 
 
+### Running with synthetic data
+
+Synthetic data generators are provided so that the full pipeline can be executed
+without access to the private dataset. See [`synthetic_data/README.md`](synthetic_data/README.md) for details.
+
+```bash
+# 1. Generate synthetic active and passive data
+python synthetic_data/active/generate_synthetic_data.py --n-participants 15 --seed 42
+python synthetic_data/passive/generate_synthetic_data.py --n-days 40 --seed 42 --skip-audio
+
+# 2. Run the active speech modelling pipeline
+python src/main.py src/experiment_configs/synthetic/synthetic-eGeMAPSv02.yaml
+
+# 3. Collect results into CSV
+python src/collect_results.py
+
+# 4. Compute bootstrap confidence intervals and collect best-performing models
+# Run the following Jupyter notebooks:
+notebooks/mwas/synthetic-bootstrapping-bulk_apply_confidence_intervals_to_results.ipynb
+notebooks/mwas/synthetic-paper-collect_results_for_expanded_main_table.ipynb
+
+# 5. Session-level evaluation and retrospective label validation
+python notebooks/mwas/evaluate_session_level_ccc.py
+python notebooks/mwas/validate_retrospective_labels.py
+# Note: evaluate_session_level_ccc-scatterplot.py targets the specific best-performing
+# model configuration from the paper and is not run with synthetic data.
+
+# 6. Compose LaTeX table
+notebooks/mwas/synthetic-paper-compose_main_modelling_table-session_level.ipynb
+
+# 7. Passive pipeline evaluation (run from repository root)
+python passive_recordings/src/evaluate_results/evaluate_time_course_main.py
+python passive_recordings/src/evaluate_results/confounder_noise_denoising_main.py
+python passive_recordings/src/evaluate_results/mediation_analysis_main.py --quick
+python passive_recordings/src/evaluate_results/mediation_diagram.py \
+    --input synthetic_data/passive/data/evaluated/synthetic-mediation-wind_emotion_stress/mediation_results.yaml \
+    --output synthetic_data/passive/data/evaluated/synthetic-mediation-wind_emotion_stress/causal_diagram_pgf.pdf
+```
+
+Several scripts have their hardcoded paths adjusted to point to the synthetic
+data directories. The original paths are preserved as comments. Synthetic
+results are written to `results/synthetic/` and
+`synthetic_data/passive/data/evaluated/` so that no original results under
+`results/mwas/` or `passive_recordings/data/evaluated/` are overwritten.
+
+The `--quick` flag on `mediation_analysis_main.py` reduces the bootstrap
+iterations to 10 for fast verification. The upstream audio compression and
+prediction scripts (`compress_extracted_files/`, `process_and_predict/`)
+require real VDR audio and additional dependencies (`sox`) and are therefore
+not covered by the synthetic data pipeline.
+
+> **Note:** Results from synthetic data have no scientific meaning. The
+> synthetic labels are random and unrelated to the audio content.
+
+
 ## Workflow
 
 ### Entry point
