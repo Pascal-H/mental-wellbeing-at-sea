@@ -1,6 +1,10 @@
 import os
 import argparse
 
+import matplotlib
+
+matplotlib.use("Agg")  # non-interactive backend: save figures without GUI
+
 import audeer
 
 import yaml
@@ -22,12 +26,16 @@ def main(args):
     args : Args
         Arguments object containing configuration parameters:
         - dir_output_root: Root directory with prediction outputs
-        - dir_evaluated: Directory for evaluation results
+        - dir_evaluated: Directory for evaluation results (pickle data)
+        - dir_plots: Optional separate directory for plot output
         - flag_concat: Whether to concatenate predictions anew
         - preds_str: Prediction type identifier (e.g., "emotion")
         - path_active: Path to active survey data
         - path_time_course_events: Path to event timing YAML file
     """
+    # Use dir_plots for plot output if available, otherwise fall back to dir_evaluated
+    dir_plots = getattr(args, "dir_plots", args.dir_evaluated)
+
     df_snr = evaluate_time_course_utils.concat_all_preds(
         args.dir_output_root, args.dir_evaluated, args.flag_concat, "snr"
     )
@@ -41,7 +49,7 @@ def main(args):
         .reset_index()
     )
 
-    out_dir_snr = os.path.join(args.dir_evaluated, "plots-snr-distribution-min3s")
+    out_dir_snr = os.path.join(dir_plots, "plots-snr-distribution-min3s")
     out_dir_snr = audeer.mkdir(out_dir_snr)
     evaluate_utils_snr_distribution.plot_snr_distribution(
         df_snr_3s, "M", out_dir_snr, "M"
@@ -66,7 +74,7 @@ def main(args):
         df_passive=df_passive,
         df_active=df_active,
         path_time_course_events=args.path_time_course_events,
-        dir_evaluated=args.dir_evaluated,
+        dir_evaluated=dir_plots,
         preds_str=args.preds_str,
     )
 

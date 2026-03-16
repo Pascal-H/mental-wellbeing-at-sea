@@ -178,7 +178,7 @@ def run_mediation_mlm(df, x_col, m_col, y_col, cluster_col, n_bootstrap=500, see
     try:
         # Model 1: c-path (total effect)
         m1 = smf.mixedlm(f"{y_col} ~ {x_col}", df, groups=df[cluster_col]).fit(
-            reml=False, method="nm"
+            reml=False
         )
         c_coef, c_se, c_pval = (
             m1.fe_params[x_col],
@@ -190,7 +190,7 @@ def run_mediation_mlm(df, x_col, m_col, y_col, cluster_col, n_bootstrap=500, see
 
         # Model 2: a-path (X -> M)
         m2 = smf.mixedlm(f"{m_col} ~ {x_col}", df, groups=df[cluster_col]).fit(
-            reml=False, method="nm"
+            reml=False
         )
         a_coef, a_se, a_pval = (
             m2.fe_params[x_col],
@@ -203,7 +203,7 @@ def run_mediation_mlm(df, x_col, m_col, y_col, cluster_col, n_bootstrap=500, see
         # Model 3: b and c' paths
         m3 = smf.mixedlm(
             f"{y_col} ~ {x_col} + {m_col}", df, groups=df[cluster_col]
-        ).fit(reml=False, method="nm")
+        ).fit(reml=False)
         cp_coef, cp_se, cp_pval = (
             m3.fe_params[x_col],
             m3.bse[x_col],
@@ -313,9 +313,7 @@ def run_adjusted_mediation_mlm(
 
     try:
         formula1 = f"{y_col} ~ {x_col}" + (f" + {cov_str}" if cov_str else "")
-        m1 = smf.mixedlm(formula1, df, groups=df[cluster_col]).fit(
-            reml=False, method="nm"
-        )
+        m1 = smf.mixedlm(formula1, df, groups=df[cluster_col]).fit(reml=False)
         c_coef, c_se, c_pval = (
             m1.fe_params[x_col],
             m1.bse[x_col],
@@ -325,9 +323,7 @@ def run_adjusted_mediation_mlm(
             convergence_ok = False
 
         formula2 = f"{m_col} ~ {x_col}" + (f" + {cov_str}" if cov_str else "")
-        m2 = smf.mixedlm(formula2, df, groups=df[cluster_col]).fit(
-            reml=False, method="nm"
-        )
+        m2 = smf.mixedlm(formula2, df, groups=df[cluster_col]).fit(reml=False)
         a_coef, a_se, a_pval = (
             m2.fe_params[x_col],
             m2.bse[x_col],
@@ -337,9 +333,7 @@ def run_adjusted_mediation_mlm(
             convergence_ok = False
 
         formula3 = f"{y_col} ~ {x_col} + {m_col}" + (f" + {cov_str}" if cov_str else "")
-        m3 = smf.mixedlm(formula3, df, groups=df[cluster_col]).fit(
-            reml=False, method="nm"
-        )
+        m3 = smf.mixedlm(formula3, df, groups=df[cluster_col]).fit(reml=False)
         cp_coef, cp_se, cp_pval = (
             m3.fe_params[x_col],
             m3.bse[x_col],
@@ -1087,23 +1081,44 @@ def main():
         default=None,
         help="Directory to save results (YAML + text report)",
     )
+    parser.add_argument(
+        "--quick",
+        action="store_true",
+        help="Use minimal bootstrap (10 iterations) for fast pipeline verification",
+    )
     args, _ = parser.parse_known_args()
+
+    # Bootstrap counts -- reduced when --quick is used (e.g., synthetic data)
+    N_BOOT_PRIMARY = 10 if args.quick else 1000
+    N_BOOT_SECONDARY = 10 if args.quick else 500
+    N_BOOT_OLS = 10 if args.quick else 1000
 
     # -- Paths (adjust to your data layout) ---------------------------------
     dir_script = os.path.dirname(os.path.abspath(__file__))
     dir_repo = os.path.dirname(os.path.dirname(dir_script))  # repo root
 
-    dir_output = os.path.join(dir_repo, "data", "output")
-    dir_evaluated = os.path.join(dir_repo, "data", "evaluated")
+    # Original paths (require original data, not publicly available):
+    # dir_output = os.path.join(dir_repo, "data", "output")
+    # dir_evaluated = os.path.join(dir_repo, "data", "evaluated")
+    # dir_wind = os.path.join(dir_evaluated, "wind_speed")
+    # path_active = (
+    #     "/data/share/aisoundlab-mental_wellbeing_at_sea/"
+    #     "data_mwas_processed-final_data/final_data-df_files.csv"
+    # )
+    # yaml_events = os.path.join(dir_script, "evaluate_time_course_events.yaml")
+
+    # Synthetic data paths (for pipeline verification without original data)
+    synth_passive = os.path.join(os.path.dirname(dir_repo), "synthetic_data", "passive")
+    dir_output = os.path.join(synth_passive, "data", "output")
+    dir_evaluated = os.path.join(synth_passive, "data", "evaluated")
     dir_wind = os.path.join(dir_evaluated, "wind_speed")
-    path_active = (
-        "/data/share/aisoundlab-mental_wellbeing_at_sea/"
-        "data_mwas_processed-final_data/final_data-df_files.csv"
+    path_active = os.path.join(dir_evaluated, "synthetic_active_data.csv")
+    yaml_events = os.path.join(
+        synth_passive, "src", "evaluate_results", "evaluate_time_course_events.yaml"
     )
-    yaml_events = os.path.join(dir_script, "evaluate_time_course_events.yaml")
 
     output_dir = args.output_dir or os.path.join(
-        dir_evaluated, "mediation-wind_emotion_stress"
+        dir_evaluated, "synthetic-mediation-wind_emotion_stress"
     )
     os.makedirs(output_dir, exist_ok=True)
 
@@ -1304,7 +1319,7 @@ def main():
         "emotion_combined",
         "stress_current",
         "speaker_file",
-        n_bootstrap=1000,
+        n_bootstrap=N_BOOT_PRIMARY,
         seed=42,
     )
     results["primary"] = r
@@ -1331,7 +1346,7 @@ def main():
                 dim,
                 "stress_current",
                 "speaker_file",
-                n_bootstrap=500,
+                n_bootstrap=N_BOOT_SECONDARY,
                 seed=42,
             )
             results["dimensions"][label] = r
@@ -1367,7 +1382,7 @@ def main():
                     "emotion_combined",
                     f"{outcome}_norm",
                     "speaker_file",
-                    n_bootstrap=500,
+                    n_bootstrap=N_BOOT_SECONDARY,
                     seed=42,
                 )
                 results["outcomes"][label] = r
@@ -1415,7 +1430,7 @@ def main():
         "wind_norm",
         "emotion_combined",
         "stress_current",
-        n_bootstrap=1000,
+        n_bootstrap=N_BOOT_OLS,
     )
     r_mlm = results["primary"]
 
@@ -1462,7 +1477,7 @@ def main():
             "stress_current",
             "speaker_file",
             covariates=covariates,
-            n_bootstrap=500,
+            n_bootstrap=N_BOOT_SECONDARY,
             seed=42,
         )
         results["confounder_adjusted"][label] = r_adj
