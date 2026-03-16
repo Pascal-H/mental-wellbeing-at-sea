@@ -29,10 +29,15 @@ if __name__ == "__main__":
 
     ### Here you can refine the retrieval ###
     # Collect results for all target variables present in the results directory
-    all_targets = [
-        d for d in os.listdir(path_results_root)
-        if os.path.isdir(os.path.join(path_results_root, d))
-    ] if os.path.isdir(path_results_root) else []
+    all_targets = (
+        [
+            d
+            for d in os.listdir(path_results_root)
+            if os.path.isdir(os.path.join(path_results_root, d))
+        ]
+        if os.path.isdir(path_results_root)
+        else []
+    )
     if not all_targets:
         # Fallback: single target
         all_targets = ["who_5_percentage_score_corrected"]

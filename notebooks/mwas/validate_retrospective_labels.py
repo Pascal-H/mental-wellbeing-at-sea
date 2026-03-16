@@ -233,22 +233,39 @@ def main():
     # ===== Paths =====
     base_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(base_dir, "..", ".."))
-    path_results_root = os.path.join(project_root, "results", "mwas", "modelling")
+    # Original paths (require original data, not publicly available):
+    # path_results_root = os.path.join(project_root, "results", "mwas", "modelling")
+    # path_paper_csv = os.path.join(
+    #     project_root, "results", "mwas", "composed",
+    #     "compiled-merged_denoised_noisy-paper-proper_loso-expanded.csv",
+    # )
+    # path_meta_csv = (
+    #     "/data/share/aisoundlab-mental_wellbeing_at_sea/"
+    #     "data_mwas_processed-final_data/final_data-df_files.csv"
+    # )
+    # output_dir = os.path.join(
+    #     project_root, "results", "mwas", "composed", "session_level_analysis",
+    # )
+
+    # Synthetic data paths (for pipeline verification without original data)
+    path_results_root = os.path.join(project_root, "results", "synthetic", "modelling")
     path_paper_csv = os.path.join(
         project_root,
         "results",
-        "mwas",
+        "synthetic",
         "composed",
-        "compiled-merged_denoised_noisy-paper-proper_loso-expanded.csv",
+        "compiled-synthetic-paper.csv",
     )
-    path_meta_csv = (
-        "/data/share/aisoundlab-mental_wellbeing_at_sea/"
-        "data_mwas_processed-final_data/final_data-df_files.csv"
+    path_meta_csv = os.path.join(
+        project_root,
+        "synthetic_data",
+        "active",
+        "synthetic_metadata.csv",
     )
     output_dir = os.path.join(
         project_root,
         "results",
-        "mwas",
+        "synthetic",
         "composed",
         "session_level_analysis",
     )

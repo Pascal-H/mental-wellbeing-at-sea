@@ -1,10 +1,12 @@
 import os
+
 os.environ["MPLBACKEND"] = "Agg"  # force non-interactive backend before any import
 
 import argparse
 import itertools
 
 import matplotlib
+
 matplotlib.use("Agg")  # non-interactive backend: avoid tkinter errors in workers
 
 import pandas as pd
