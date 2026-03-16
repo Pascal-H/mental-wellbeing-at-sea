@@ -231,6 +231,11 @@ def generate_event_timings(output_dir, days, rng):
         return None
 
     n_days = len(days)
+    if n_days < 8:
+        raise ValueError(
+            f"generate_event_timings requires at least 8 days to generate 4 unique "
+            f"event split points, but got {n_days}. Increase --n-days to at least 8."
+        )
     # Divide the period into: port1 -> sea1 -> port2 (loading) -> sea2 -> port3 (discharge)
     splits = sorted(rng.choice(range(2, n_days - 2), size=4, replace=False))
 

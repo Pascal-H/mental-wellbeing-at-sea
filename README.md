@@ -46,7 +46,7 @@ python synthetic_data/active/generate_synthetic_data.py --n-participants 15 --se
 python synthetic_data/passive/generate_synthetic_data.py --n-days 40 --seed 42 --skip-audio
 
 # 2. Run the active speech modelling pipeline
-python src/main.py experiment_configs/synthetic/synthetic-eGeMAPSv02.yaml
+python src/main.py src/experiment_configs/synthetic/synthetic-eGeMAPSv02.yaml
 
 # 3. Collect results into CSV
 python src/collect_results.py

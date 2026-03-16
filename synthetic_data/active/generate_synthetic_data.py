@@ -255,9 +255,9 @@ def generate_experiment_config(
     output_dir : str
         Directory to write the config file.
     csv_path : str
-        Absolute path to the synthetic metadata CSV.
+        Path to the synthetic metadata CSV.
     audio_dir : str
-        Absolute path to the synthetic audio directory.
+        Path to the synthetic audio directory.
     test_speakers : list
         List of participant codes to use as fixed test speakers.
     config_name : str
@@ -268,9 +268,33 @@ def generate_experiment_config(
     str
         Path to the generated config file.
     """
-    # Use absolute paths for the config
+    # Resolve to absolute paths first
     csv_path_abs = os.path.abspath(csv_path)
     audio_dir_abs = os.path.abspath(audio_dir)
+
+    # Prefer repo-relative paths in the config, falling back to absolute if needed
+    repo_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
+    )
+
+    def _to_repo_relative(path_abs: str) -> str:
+        """
+        Return a path relative to the repository root if it is inside the repo,
+        otherwise return the absolute path unchanged.
+        """
+        try:
+            rel_path = os.path.relpath(path_abs, repo_root)
+        except ValueError:
+            # On some platforms, relpath can fail for different drives; keep absolute.
+            return path_abs
+
+        # If the relative path would point outside the repo, keep absolute.
+        if rel_path.startswith(os.pardir + os.sep) or rel_path == os.pardir:
+            return path_abs
+        return rel_path
+
+    csv_path_for_config = _to_repo_relative(csv_path_abs)
+    audio_dir_for_config = _to_repo_relative(audio_dir_abs)
 
     config_content = f"""# ============================================================================
 # Synthetic experiment configuration for the active speech pipeline
@@ -282,9 +306,9 @@ def generate_experiment_config(
 
 database:
   type: "local"
-  path_df_meta: "{csv_path_abs}"
+  path_df_meta: "{csv_path_for_config}"
   index_column: ["file"]
-  path_data: "{audio_dir_abs}"
+  path_data: "{audio_dir_for_config}"
   min_sessions: 1
   discard_prompts: ["sustained_utterance_0113", "emotion_acting_3130", "emotion_acting_5177", "emotion_acting_2017"]
   filter_files:

@@ -8,9 +8,9 @@
 
 database:
   type: "local"
-  path_df_meta: "/home/audeering.local/phecker/audeering_local/projects/AUdiary/projects/2021-safetytech_accelerator-mental_wellbeing_at_sea/2024-HEALTHINF/open_source_repository/modelling-static/synthetic_data/active/synthetic_metadata.csv"
+  path_df_meta: "data/synthetic/active/synthetic_metadata.csv"
   index_column: ["file"]
-  path_data: "/home/audeering.local/phecker/audeering_local/projects/AUdiary/projects/2021-safetytech_accelerator-mental_wellbeing_at_sea/2024-HEALTHINF/open_source_repository/modelling-static/synthetic_data/active/audio"
+  path_data: "data/synthetic/active/audio"
   min_sessions: 1
   discard_prompts: ["sustained_utterance_0113", "emotion_acting_3130", "emotion_acting_5177", "emotion_acting_2017"]
   filter_files:
