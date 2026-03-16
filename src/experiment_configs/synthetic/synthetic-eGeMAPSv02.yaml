@@ -8,9 +8,9 @@
 
 database:
   type: "local"
-  path_df_meta: "data/synthetic/active/synthetic_metadata.csv"
+  path_df_meta: "synthetic_data/active/synthetic_metadata.csv"
   index_column: ["file"]
-  path_data: "data/synthetic/active/audio"
+  path_data: "synthetic_data/active/audio"
   min_sessions: 1
   discard_prompts: ["sustained_utterance_0113", "emotion_acting_3130", "emotion_acting_5177", "emotion_acting_2017"]
   filter_files:
