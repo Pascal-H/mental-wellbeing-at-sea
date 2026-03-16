@@ -92,9 +92,7 @@ def generate_synthetic_audio(duration_s, sr=16_000, rng=None):
         freq = rng.uniform(50, 3000)
         amplitude = rng.uniform(0.05, 0.3)
         phase = rng.uniform(0, 2 * np.pi)
-        signal += (amplitude * np.sin(2 * np.pi * freq * t + phase)).astype(
-            np.float32
-        )
+        signal += (amplitude * np.sin(2 * np.pi * freq * t + phase)).astype(np.float32)
 
     peak = np.abs(signal).max()
     if peak > 0:
@@ -159,9 +157,7 @@ def generate_vdr_audio_files(output_dir, days, rng, sr=16_000, segments_per_day=
                 duration = rng.uniform(5.0, 15.0)
                 waveform = generate_synthetic_audio(duration, sr=sr, rng=rng)
                 sf.write(filepath, waveform, sr)
-                generated_files.append(
-                    os.path.relpath(filepath, output_dir)
-                )
+                generated_files.append(os.path.relpath(filepath, output_dir))
 
     return generated_files
 
@@ -343,9 +339,7 @@ def generate_prediction_pickles(output_dir, days, rng):
         pred_dir_emotion = os.path.join(
             output_pred_dir, dir_name, "predictions-emotion"
         )
-        pred_dir_snr = os.path.join(
-            output_pred_dir, dir_name, "predictions-snr"
-        )
+        pred_dir_snr = os.path.join(output_pred_dir, dir_name, "predictions-snr")
         os.makedirs(pred_dir_emotion, exist_ok=True)
         os.makedirs(pred_dir_snr, exist_ok=True)
 
@@ -478,8 +472,9 @@ def generate_prediction_pickles(output_dir, days, rng):
 # ---------------------------------------------------------------------------
 # Active survey data for mediation analysis
 # ---------------------------------------------------------------------------
-def generate_active_survey_data(output_dir, days, rng, n_participants=15,
-                                active_csv_path=None):
+def generate_active_survey_data(
+    output_dir, days, rng, n_participants=15, active_csv_path=None
+):
     """
     Provide active survey data for the mediation analysis.
 
@@ -506,12 +501,15 @@ def generate_active_survey_data(output_dir, days, rng, n_participants=15,
     str
         Path to the generated/copied CSV file.
     """
-    csv_path = os.path.join(output_dir, "data", "evaluated", "synthetic_active_data.csv")
+    csv_path = os.path.join(
+        output_dir, "data", "evaluated", "synthetic_active_data.csv"
+    )
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
 
     # Reuse the active pipeline CSV when available
     if active_csv_path and os.path.isfile(active_csv_path):
         import shutil
+
         shutil.copy2(active_csv_path, csv_path)
         print(f"  Reused active metadata from {active_csv_path}")
         return csv_path
@@ -539,9 +537,7 @@ def generate_active_survey_data(output_dir, days, rng, n_participants=15,
                         "participant_code": participant_codes[p_idx],
                         "session": session_id,
                         "speaker_file": speaker_files[p_idx],
-                        "survey": rng.choice(
-                            ["daily", "weekly_01", "weekly_02"]
-                        ),
+                        "survey": rng.choice(["daily", "weekly_01", "weekly_02"]),
                         "prompt": rng.choice(
                             [
                                 "work_tasks_4718",
@@ -559,16 +555,12 @@ def generate_active_survey_data(output_dir, days, rng, n_participants=15,
                         "stress_work_tasks": float(rng.uniform(0, 100)),
                         "pss_10_total_score": float(rng.integers(0, 41)),
                         "phq_8_total_score": float(rng.integers(0, 25)),
-                        "who_5_percentage_score_corrected": float(
-                            rng.uniform(0, 100)
-                        ),
+                        "who_5_percentage_score_corrected": float(rng.uniform(0, 100)),
                         "emotions_current_happy": float(rng.uniform(0, 100)),
                         "emotions_current_sad": float(rng.uniform(0, 100)),
                         "emotions_current_anger": float(rng.uniform(0, 100)),
                         "emotions_current_fear": float(rng.uniform(0, 100)),
-                        "emotions_current_indifference": float(
-                            rng.uniform(0, 100)
-                        ),
+                        "emotions_current_indifference": float(rng.uniform(0, 100)),
                         "emotions_current_shame": float(rng.uniform(0, 100)),
                     }
                 )
@@ -625,7 +617,9 @@ def main():
     days = [base_date + timedelta(days=i) for i in range(args.n_days)]
 
     print(f"Generating synthetic passive data for {args.n_days} days...")
-    print(f"Date range: {days[0].strftime('%Y-%m-%d')} to {days[-1].strftime('%Y-%m-%d')}")
+    print(
+        f"Date range: {days[0].strftime('%Y-%m-%d')} to {days[-1].strftime('%Y-%m-%d')}"
+    )
     print(f"Output directory: {output_dir}")
 
     # -----------------------------------------------------------------------
